@@ -7,43 +7,38 @@ import java.sql.Array;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Integer> childTasks = new ArrayList<>();
+    private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(@NotNull Task task) {
         super(task);
     }
 
-    public Epic(@NotNull Epic epic) {
-        super(epic);
-        addSubtasks(childTasks);
-    }
-
-    public ArrayList<Integer> getSubtasksId() {
-        return childTasks;
+    public ArrayList<Integer> getSubtaskIds() {
+        return subtaskIds;
     }
 
     public void addSubtask(int id) {
-        if (childTasks.contains(id)) {
+        if (subtaskIds.contains(id)) {
             return;
         }
-        childTasks.add(id);
+        subtaskIds.add(id);
     }
 
     public void addSubtasks(ArrayList<Integer> subtasks) {
         if (subtasks == null) {
             return;
         }
-        for (int childTaskId : subtasks) {
-            addSubtask(childTaskId);
+        for (int subtaskId : subtasks) {
+            addSubtask(subtaskId);
         }
     }
 
     public void deleteTaskById(Integer id) {
-        childTasks.remove(id);
+        subtaskIds.remove(id);
     }
 
     public void clear() {
-        childTasks.clear();
+        subtaskIds.clear();
     }
 
     @Override
@@ -56,10 +51,10 @@ public class Epic extends Task {
             result = result + ", description=null";
         }
 
-        if (!childTasks.isEmpty()) {
-            result = result + ", childTasks.count=" + childTasks.size();
+        if (!subtaskIds.isEmpty()) {
+            result = result + ", subtasks.count=" + subtaskIds.size();
         } else {
-            result = result + ", childTasks=null";
+            result = result + ", subtasks=null";
         }
 
         return result + '}';

@@ -10,16 +10,11 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(@NotNull Subtask subtask) {
-        super(subtask);
-        this.epicId = subtask.getParentTaskId();
-    }
-
-    public void setParentTaskId(int epicId) {
+    public void setEpicId(int epicId) {
         this.epicId = epicId;
     }
 
-    public int getParentTaskId() {
+    public int getEpicId() {
         return epicId;
     }
 
