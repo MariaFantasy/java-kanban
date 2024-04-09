@@ -4,13 +4,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class Epic extends Task {
+public class Epic extends Task implements Cloneable {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(@NotNull Task task) {
         super(task);
     }
 
+    public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
+        this.subtaskIds = subtaskIds;
+    }
     public ArrayList<Integer> getSubtaskIds() {
         return subtaskIds;
     }
@@ -56,5 +59,11 @@ public class Epic extends Task {
         }
 
         return result + '}';
+    }
+
+    @Override
+    public Epic clone() {
+        Epic clone = (Epic) super.clone();
+        return clone;
     }
 }

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class Task {
+public class Task implements Cloneable {
     private int id;
     private String name;
     private String description;
@@ -101,5 +101,15 @@ public class Task {
         }
 
         return result + '}';
+    }
+
+    @Override
+    public Task clone() {
+        try {
+            Task clone = (Task) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

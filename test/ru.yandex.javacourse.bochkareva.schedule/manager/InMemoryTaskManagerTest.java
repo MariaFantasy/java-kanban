@@ -1,4 +1,4 @@
-package ru.yandex.javacource.bochkareva.schedule.test.manager;
+package ru.yandex.javacourse.bochkareva.schedule.manager;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

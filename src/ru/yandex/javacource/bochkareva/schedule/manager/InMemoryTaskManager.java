@@ -3,15 +3,17 @@ package ru.yandex.javacource.bochkareva.schedule.manager;
 import ru.yandex.javacource.bochkareva.schedule.task.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final HistoryManager historyManager = new InMemoryHistoryManager();
     private int taskCounter;
-    private HistoryManager historyManager = new InMemoryHistoryManager();
 
     public InMemoryTaskManager() {
         taskCounter = 0;
@@ -156,12 +158,13 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         int id = epic.getId();
-        Epic savedEpic = epics.get(id);
+        final Epic savedEpic = epics.get(id);
         if (savedEpic == null) {
             return;
         }
-        savedEpic.setName(epic.getName());
-        savedEpic.setDescription(epic.getDescription());
+        epic.setSubtaskIds(savedEpic.getSubtaskIds());
+        epic.setStatus(savedEpic.getStatus());
+        epics.put(id, epic);
     }
 
     @Override
@@ -244,7 +247,7 @@ public class InMemoryTaskManager implements TaskManager {
         return task;
     }
 
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 }

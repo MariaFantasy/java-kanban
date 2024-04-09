@@ -1,4 +1,4 @@
-package ru.yandex.javacource.bochkareva.schedule.test.manager;
+package ru.yandex.javacourse.bochkareva.schedule.manager;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +29,7 @@ class ManagersTest {
         ArrayList<Subtask> subtasks = taskManager.getSubtasks();
 
         HistoryManager historyManager = managers.getDefaultHistory();
-        ArrayList<Task> history = historyManager.getHistory();
+        List<Task> history = historyManager.getHistory();
 
         assertNotNull(tasks, "TaskManager не был создан");
         assertNotNull(epics, "TaskManager не был создан");

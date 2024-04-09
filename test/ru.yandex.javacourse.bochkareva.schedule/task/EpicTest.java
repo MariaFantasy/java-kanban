@@ -1,4 +1,4 @@
-package ru.yandex.javacource.bochkareva.schedule.test.task;
+package ru.yandex.javacourse.bochkareva.schedule.task;
 
 import org.junit.jupiter.api.Test;
 
