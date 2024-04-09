@@ -1,6 +1,5 @@
 package ru.yandex.javacourse.bochkareva.schedule.task;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import ru.yandex.javacource.bochkareva.schedule.task.Task;

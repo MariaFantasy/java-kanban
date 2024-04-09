@@ -6,7 +6,6 @@ import ru.yandex.javacource.bochkareva.schedule.task.Task;
 import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 class EpicTest {

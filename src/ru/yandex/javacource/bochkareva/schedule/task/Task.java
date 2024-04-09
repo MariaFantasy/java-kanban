@@ -106,8 +106,7 @@ public class Task implements Cloneable {
     @Override
     public Task clone() {
         try {
-            Task clone = (Task) super.clone();
-            return clone;
+            return (Task) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

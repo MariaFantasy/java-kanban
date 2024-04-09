@@ -63,7 +63,6 @@ public class Epic extends Task implements Cloneable {
 
     @Override
     public Epic clone() {
-        Epic clone = (Epic) super.clone();
-        return clone;
+        return (Epic) super.clone();
     }
 }

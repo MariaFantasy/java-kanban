@@ -33,7 +33,6 @@ public class Subtask extends Task implements Cloneable {
 
     @Override
     public Subtask clone() {
-        Subtask clone = (Subtask) super.clone();
-        return clone;
+        return (Subtask) super.clone();
     }
 }
