@@ -1,12 +1,15 @@
 package ru.yandex.javacource.bochkareva.schedule;
 
-import ru.yandex.javacource.bochkareva.schedule.task.*;
+import ru.yandex.javacource.bochkareva.schedule.manager.Managers;
 import ru.yandex.javacource.bochkareva.schedule.manager.TaskManager;
+import ru.yandex.javacource.bochkareva.schedule.task.*;
+import ru.yandex.javacource.bochkareva.schedule.manager.InMemoryTaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        Managers managers = new Managers();
+        TaskManager taskManager = managers.getDefault();
 
         Task task1 = new Task(1, "Прочитать статью", "https://habr.com/ru/articles/801431/");
         Task task2 = new Task(1, "Прочитать статью", "https://habr.com/ru/companies/cdek_blog/articles/796451/");
@@ -123,6 +126,33 @@ public class Main {
         }
         for (Subtask subtask : taskManager.getSubtasks()) {
             System.out.println(subtask);
+        }
+
+        System.out.println("---------------------------------------");
+        printAllTasks(taskManager);
+    }
+
+    private static void printAllTasks(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Task epic : manager.getEpics()) {
+            System.out.println(epic);
+
+            for (Task task : manager.getSubtasksOfEpic(epic.getId())) {
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getSubtasks()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
         }
     }
 }

@@ -1,9 +1,7 @@
 package ru.yandex.javacource.bochkareva.schedule.task;
 
-import com.sun.jdi.ArrayReference;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -18,7 +16,7 @@ public class Epic extends Task {
     }
 
     public void addSubtask(int id) {
-        if (subtaskIds.contains(id)) {
+        if (super.getId() == id) {
             return;
         }
         subtaskIds.add(id);
