@@ -26,8 +26,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         int id = ++taskCounter;
         task.setId(id);
-        Task newTask = new Task(task);
-        tasks.put(id, newTask);
+        tasks.put(id, task);
         return id;
     }
 

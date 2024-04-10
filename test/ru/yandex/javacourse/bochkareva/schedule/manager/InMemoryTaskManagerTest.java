@@ -1,6 +1,7 @@
 package ru.yandex.javacourse.bochkareva.schedule.manager;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.javacource.bochkareva.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.bochkareva.schedule.task.Epic;
@@ -11,15 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
     public static InMemoryTaskManager inMemoryTaskManager;
+    public static Task task;
 
     @BeforeAll
     public static void beforeAll() {
         inMemoryTaskManager = new InMemoryTaskManager();
     }
 
+    @BeforeEach
+    public void beforeEach() {
+        task = new Task(111, "New Task");
+    }
+
     @Test
     public void shouldNotBeAbleToAddEpicAsSubtaskToYourself() {
-        Task task = new Task(111, "New Task");
         Epic epic = new Epic(task);
 
         int epicId = inMemoryTaskManager.addEpic(epic);
