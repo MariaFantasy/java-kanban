@@ -40,8 +40,12 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     Task getTask(int id);
+    
     Epic getEpic(int id);
+    
     Subtask getSubtask(int id);
+    
     Task getTaskById(int id);
+    
     List<Task> getHistory();
 }
