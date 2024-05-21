@@ -130,6 +130,77 @@ public class Main {
 
         System.out.println("---------------------------------------");
         printAllTasks(taskManager);
+
+        // ***********************************
+        // Дополнительное задание из спринта 6
+        // ***********************************
+
+        TaskManager taskManagerSprint6 = managers.getDefault();
+
+        // Создаем две задачи
+        Task task1Sprint6 = new Task(1, "Очень интересная задача 1");
+        Task task2Sprint6 = new Task(1, "Очень интересная задача 2");
+
+        int task1IdSprint6 = taskManagerSprint6.addTask(task1Sprint6);
+        int task2IdSprint6 = taskManagerSprint6.addTask(task2Sprint6);
+
+        // Создаем эпик с тремя подзадачами
+        Task taskToEpic1Sprint6 = new Task(1, "Задача-эпик 1");
+        Epic epic1Sprint6 = new Epic(taskToEpic1Sprint6);
+        int epic1IdSprint6 = taskManagerSprint6.addEpic(epic1Sprint6);
+
+        Task taskToSubtask1taskManagerSprint6 = new Task(1, "Подзадача 1");
+        Task taskToSubtask2taskManagerSprint6 = new Task(1, "Подзадача 2");
+        Task taskToSubtask3taskManagerSprint6 = new Task(1, "Подзадача 3");
+        Subtask subtask1Sprint6 = new Subtask(taskToSubtask1taskManagerSprint6, epic1IdSprint6);
+        Subtask subtask2Sprint6 = new Subtask(taskToSubtask2taskManagerSprint6, epic1IdSprint6);
+        Subtask subtask3Sprint6 = new Subtask(taskToSubtask3taskManagerSprint6, epic1IdSprint6);
+
+        int subtask1IdSprint6 = taskManagerSprint6.addSubtask(subtask1Sprint6);
+        int subtask2IdSprint6 = taskManagerSprint6.addSubtask(subtask2Sprint6);
+        int subtask3IdSprint6 = taskManagerSprint6.addSubtask(subtask3Sprint6);
+
+        // Создаем эпик без подзадач
+        Task taskToEpic2Sprint6 = new Task(1, "Задача-эпик 2");
+        Epic epic2Sprint6 = new Epic(taskToEpic2Sprint6);
+        int epic2IdSprint6 = taskManagerSprint6.addEpic(epic2Sprint6);
+
+        // Запрашиваем задачи и смотрим на историю
+        taskManagerSprint6.getTask(task1IdSprint6);
+        taskManagerSprint6.getTask(task2IdSprint6);
+        taskManagerSprint6.getEpic(epic1IdSprint6);
+        taskManagerSprint6.getEpic(epic2IdSprint6);
+        taskManagerSprint6.getSubtask(subtask1IdSprint6);
+        taskManagerSprint6.getSubtask(subtask3IdSprint6);
+
+        System.out.println("Печатаем историю:");
+        for (Task task : taskManagerSprint6.getHistory()) {
+            System.out.println(task);
+        }
+
+        taskManagerSprint6.getSubtask(subtask2IdSprint6);
+        taskManagerSprint6.getTask(task1IdSprint6);
+        taskManagerSprint6.getTask(task2IdSprint6);
+        taskManagerSprint6.getEpic(epic1IdSprint6);
+        taskManagerSprint6.getEpic(epic2IdSprint6);
+
+        System.out.println("Печатаем историю:");
+        for (Task task : taskManagerSprint6.getHistory()) {
+            System.out.println(task);
+        }
+
+        taskManagerSprint6.deleteTaskById(task1IdSprint6);
+        taskManagerSprint6.deleteEpicById(epic2IdSprint6);
+        taskManagerSprint6.deleteSubtaskById(subtask2IdSprint6);
+
+        System.out.println("Печатаем историю:");
+        for (Task task : taskManagerSprint6.getHistory()) {
+            System.out.println(task);
+        }
+
+        taskManagerSprint6.deleteEpicById(epic1IdSprint6);
+
+        printAllTasks(taskManagerSprint6);
     }
 
     private static void printAllTasks(TaskManager manager) {
