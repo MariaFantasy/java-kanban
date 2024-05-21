@@ -14,6 +14,7 @@ public class Epic extends Task implements Cloneable {
     public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
         this.subtaskIds = subtaskIds;
     }
+
     public ArrayList<Integer> getSubtaskIds() {
         return subtaskIds;
     }
