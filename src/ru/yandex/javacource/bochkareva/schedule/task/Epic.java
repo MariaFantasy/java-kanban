@@ -1,13 +1,11 @@
 package ru.yandex.javacource.bochkareva.schedule.task;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 public class Epic extends Task implements Cloneable {
     private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-    public Epic(@NotNull Task task) {
+    public Epic(Task task) {
         super(task);
     }
 
