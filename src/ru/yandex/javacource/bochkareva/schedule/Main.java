@@ -3,7 +3,6 @@ package ru.yandex.javacource.bochkareva.schedule;
 import ru.yandex.javacource.bochkareva.schedule.manager.Managers;
 import ru.yandex.javacource.bochkareva.schedule.manager.TaskManager;
 import ru.yandex.javacource.bochkareva.schedule.task.*;
-import ru.yandex.javacource.bochkareva.schedule.manager.InMemoryTaskManager;
 
 public class Main {
 
