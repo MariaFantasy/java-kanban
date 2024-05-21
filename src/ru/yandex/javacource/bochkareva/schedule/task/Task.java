@@ -1,7 +1,5 @@
 package ru.yandex.javacource.bochkareva.schedule.task;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 
 public class Task implements Cloneable {
@@ -10,7 +8,7 @@ public class Task implements Cloneable {
     private String description;
     private TaskStatus status;
 
-    public Task(@NotNull Task task) {
+    public Task(Task task) {
         this.id = task.getId();
         this.name = task.getName();
         this.description = task.getDescription();

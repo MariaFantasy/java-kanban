@@ -8,6 +8,10 @@ import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.concurrent.Flow;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
@@ -39,7 +43,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldNotBeAbleToAddSubtaskAsEpicToYourself() {
-        Task task = new Task(111, "New Task");
         Epic epic = new Epic(task);
 
         int epicId = inMemoryTaskManager.addEpic(epic);
@@ -53,7 +56,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldBeAbleToAddTaskAndFindIt() {
-        Task task = new Task(111, "New Task");
         int taskId = inMemoryTaskManager.addTask(task);
         Task calculatedTask = inMemoryTaskManager.getTask(taskId);
 
@@ -64,7 +66,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldBeAbleToAddEpicAndFindIt() {
-        Task task = new Task(111, "New Task");
         Epic epic = new Epic(task);
         int epicId = inMemoryTaskManager.addEpic(epic);
         Epic calculatedEpic = inMemoryTaskManager.getEpic(epicId);
@@ -76,7 +77,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldBeAbleToAddSubtaskAndFindIt() {
-        Task task = new Task(111, "New Task");
         Epic epic = new Epic(task);
         int epicId = inMemoryTaskManager.addEpic(epic);
         Subtask subtask = new Subtask(task, epicId);
@@ -90,8 +90,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldNotBeAbleToChangeNameForTaskInTaskManager() {
-        Task task = new Task(111, "New Task");
-        int taskId = inMemoryTaskManager.addTask(task);
+        int taskId = inMemoryTaskManager.addTask(task.clone());
         task.setName("New Name");
 
         assertNotEquals(inMemoryTaskManager.getTask(taskId).getName(),
@@ -101,13 +100,46 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldHistoryManagerSaveOldTaskVersion() {
-        Task task = new Task(111, "New Task");
         int taskId = inMemoryTaskManager.addTask(task);
         Task expectedTask = inMemoryTaskManager.getTaskById(taskId);
-        inMemoryTaskManager.deleteTaskById(taskId);
+        Task taskToChange = new Task(expectedTask);
+        taskToChange.setName("Super new name");
+        inMemoryTaskManager.updateTask(taskToChange);
 
-        assertEquals(expectedTask,
-                inMemoryTaskManager.getHistory().getLast(),
+        assertEquals(expectedTask.getName(),
+                inMemoryTaskManager.getHistory().getLast().getName(),
                 "HistoryManager сохраняет не историю, а ссылки.");
+    }
+
+    @Test
+    public void shouldNotAbleAddSameTaskToHistoryManager() {
+        int expectedHistorySize = inMemoryTaskManager.getHistory().size() + 1;
+
+        int taskId = inMemoryTaskManager.addTask(task);
+
+        inMemoryTaskManager.getTask(taskId);
+        inMemoryTaskManager.getTask(taskId);
+
+        assertEquals(expectedHistorySize,
+                inMemoryTaskManager.getHistory().size(),
+                "HistoryManager сохраняет уже добавленный ранее Таск.");
+    }
+
+    @Test
+    public void shouldNotSaveNotActualIdsSubtaskInEpic() {
+        Epic epic = new Epic(task);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Subtask subtask = new Subtask(task, epicId);
+        int subtaskId = inMemoryTaskManager.addSubtask(subtask);
+
+        inMemoryTaskManager.deleteSubtaskById(subtaskId);
+        Epic epicResult = inMemoryTaskManager.getEpic(epicId);
+
+        ArrayList<Integer> result = epicResult.getSubtaskIds();
+
+        assertEquals(0,
+                epicResult.getSubtaskIds().size(),
+                "Подзадачи из эпика не удаляются.");
     }
 }

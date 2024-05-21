@@ -1,11 +1,9 @@
 package ru.yandex.javacource.bochkareva.schedule.task;
 
-import org.jetbrains.annotations.NotNull;
-
 public class Subtask extends Task implements Cloneable {
     private int epicId;
 
-    public Subtask(@NotNull Task task, int epicId) {
+    public Subtask(Task task, int epicId) {
         super(task);
         this.epicId = epicId;
     }
