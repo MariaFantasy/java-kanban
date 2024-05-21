@@ -8,6 +8,10 @@ import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.concurrent.Flow;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
@@ -117,5 +121,23 @@ class InMemoryTaskManagerTest {
         assertEquals(expectedHistorySize,
                 inMemoryTaskManager.getHistory().size(),
                 "HistoryManager сохраняет уже добавленный ранее Таск.");
+    }
+
+    @Test
+    public void shouldNotSaveNotActualIdsSubtaskInEpic() {
+        Epic epic = new Epic(task);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Subtask subtask = new Subtask(task, epicId);
+        int subtaskId = inMemoryTaskManager.addSubtask(subtask);
+
+        inMemoryTaskManager.deleteSubtaskById(subtaskId);
+        Epic epicResult = inMemoryTaskManager.getEpic(epicId);
+
+        ArrayList<Integer> result = epicResult.getSubtaskIds();
+
+        assertEquals(0,
+                epicResult.getSubtaskIds().size(),
+                "Подзадачи из эпика не удаляются.");
     }
 }
