@@ -19,6 +19,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.data = data;
             this.next = null;
             this.prev = null;
+        }
     }
 
     private final Map<Integer, Node> history = new HashMap<>();
@@ -84,6 +85,4 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return historyToReturn;
     }
-}
-
 }
