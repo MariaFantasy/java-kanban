@@ -73,7 +73,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         return historyToReturn;
     }
 }
-class Node {
+
+private class Node {
 
     public Task data;
     public Node next;
