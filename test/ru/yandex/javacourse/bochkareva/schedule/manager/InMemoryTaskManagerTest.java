@@ -102,10 +102,12 @@ class InMemoryTaskManagerTest {
     public void shouldHistoryManagerSaveOldTaskVersion() {
         int taskId = inMemoryTaskManager.addTask(task);
         Task expectedTask = inMemoryTaskManager.getTaskById(taskId);
-        inMemoryTaskManager.deleteTaskById(taskId);
+        Task taskToChange = new Task(expectedTask);
+        taskToChange.setName("Super new name");
+        inMemoryTaskManager.updateTask(taskToChange);
 
-        assertEquals(expectedTask,
-                inMemoryTaskManager.getHistory().getLast(),
+        assertEquals(expectedTask.getName(),
+                inMemoryTaskManager.getHistory().getLast().getName(),
                 "HistoryManager сохраняет не историю, а ссылки.");
     }
 
