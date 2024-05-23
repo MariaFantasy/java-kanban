@@ -15,10 +15,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         public Node next;
         public Node prev;
 
-        public Node(Task data) {
+        public Node(Task data, Node prev, Node next) {
             this.data = data;
-            this.next = null;
-            this.prev = null;
+            this.prev = prev;
+            this.next = next;
         }
     }
 
@@ -26,28 +26,17 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node tail;
     private Node head;
 
-    private void addLast(Task task) {
-        if (task == null) {
-            return;
-        }
-        remove(task.getId()); // удаляем уже существующий в истории таск
-
-        Node newNode = new Node(task);
-        if (tail != null) {
-            tail.next = newNode;
-            newNode.prev = tail;
-        }
-        tail = newNode;
+    private void linkLast(Task task) {
+        final Node node = new Node(task, tail, null);
         if (head == null) {
-            head = newNode;
+            head = node;
+        } else {
+            tail.next = node;
         }
-        history.put(task.getId(), newNode);
+        tail = node;
     }
 
-    private Task removeNode(Node node) {
-        if (node == null) {
-            return null;
-        }
+    private void removeNode(Node node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -58,8 +47,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             tail = node.prev;
         }
-        history.remove(node.data.getId());
-        return node.data;
     }
 
     @Override
@@ -67,12 +54,20 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        addLast(task.clone());
+        final int id = task.getId();
+        remove(id); // удаляем уже существующий в истории таск
+
+        linkLast(task);
+        history.put(id, tail);
     }
 
     @Override
     public void remove(int id) {
-        removeNode(history.get(id));
+        final Node node = history.remove(id);
+        if (node == null) {
+            return;
+        }
+        removeNode(node);
     }
 
     @Override
