@@ -90,15 +90,15 @@ public class Task implements Cloneable {
 
     @Override
     public String toString() {
-        String result = "Task{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", status='" + status.toString() + '\'';
+        String result = id + ",TASK," + name + "," + status.toString();
 
         if (description != null) {
-            result = result + ", description.length=" + description.length();
+            result = result + "," + description;
         } else {
-            result = result + ", description=null";
+            result = result + ",";
         }
 
-        return result + '}';
+        return result;
     }
 
     @Override
