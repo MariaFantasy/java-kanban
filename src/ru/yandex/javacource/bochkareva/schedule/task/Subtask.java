@@ -17,16 +17,15 @@ public class Subtask extends Task implements Cloneable {
     }
 
     @Override
-    public String toString() {
-        String result = "Subtask{" + "id='" + super.getId() + '\'' + ", parentTaskId='" + epicId + '\'' + ", name='" + super.getName() + '\'' + ", status='" + super.getStatus().toString() + '\'';
+    public String toString() {String result = super.getId() + ",SUBTASK," + super.getName() + "," + super.getStatus().toString();
 
         if (super.getDescription() != null) {
-            result = result + ", description.length=" + super.getDescription().length();
+            result = result + "," + super.getDescription();
         } else {
-            result = result + ", description=null";
+            result = result + ",";
         }
 
-        return result + '}';
+        return result + "," + epicId;
     }
 
     @Override

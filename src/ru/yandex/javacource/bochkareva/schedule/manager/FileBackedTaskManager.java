@@ -30,7 +30,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 writer.write(epic.toString() + ",\n");
             }
             for (Subtask subtask : super.getSubtasks()) {
-                writer.write(subtask.toString() + ",\n");
+                writer.write(subtask.toString() + "\n");
             }
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время записи файла.");
@@ -110,5 +110,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public void updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
         save();
+    }
+
+    public static void main(String[] args) {
+        FileBackedTaskManager taskManager = new FileBackedTaskManager("C:\\Users\\PC#05\\Desktop\\Test Git\\mytest.txt");
+
+        // Создаем две задачи
+        Task task1Sprint7 = new Task(1, "Очень интересная задача 1");
+        Task task2Sprint7 = new Task(1, "Очень интересная задача 2");
+
+        int task1IdSprint7 = taskManager.addTask(task1Sprint7);
+        int task2IdSprint7 = taskManager.addTask(task2Sprint7);
+
+        // Создаем эпик с тремя подзадачами
+        Task taskToEpic1Sprint7 = new Task(1, "Задача-эпик 1");
+        Epic epic1Sprint7 = new Epic(taskToEpic1Sprint7);
+        int epic1IdSprint7 = taskManager.addEpic(epic1Sprint7);
+
+        Task taskToSubtask1taskManagerSprint7 = new Task(1, "Подзадача 1");
+        Task taskToSubtask2taskManagerSprint7 = new Task(1, "Подзадача 2");
+        Task taskToSubtask3taskManagerSprint7 = new Task(1, "Подзадача 3");
+        Subtask subtask1Sprint7 = new Subtask(taskToSubtask1taskManagerSprint7, epic1IdSprint7);
+        Subtask subtask2Sprint7 = new Subtask(taskToSubtask2taskManagerSprint7, epic1IdSprint7);
+        Subtask subtask3Sprint7 = new Subtask(taskToSubtask3taskManagerSprint7, epic1IdSprint7);
+
+        int subtask1IdSprint7 = taskManager.addSubtask(subtask1Sprint7);
+        int subtask2IdSprint7 = taskManager.addSubtask(subtask2Sprint7);
+        int subtask3IdSprint7 = taskManager.addSubtask(subtask3Sprint7);
+
+        // Создаем эпик без подзадач
+        Task taskToEpic2Sprint7 = new Task(1, "Задача-эпик 2");
+        Epic epic2Sprint7 = new Epic(taskToEpic2Sprint7);
+        int epic2IdSprint7 = taskManager.addEpic(epic2Sprint7);
     }
 }
