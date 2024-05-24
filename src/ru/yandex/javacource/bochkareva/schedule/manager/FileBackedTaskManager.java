@@ -42,6 +42,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             while (fileReader.ready()) {
                 String newLine = fileReader.readLine();
                 String[] taskInfo = newLine.split(",", -1);
+                System.out.println(Arrays.toString(taskInfo));
                 Task newTask = new Task(Integer.parseInt(taskInfo[0]), taskInfo[2], taskInfo[4], TaskStatus.valueOf(taskInfo[3]));
                 switch (taskInfo[1]) {
                     case "TASK":
