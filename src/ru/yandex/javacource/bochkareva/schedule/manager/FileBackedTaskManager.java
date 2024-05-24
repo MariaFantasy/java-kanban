@@ -67,10 +67,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 mapEpicKeys.put(epic.getId(), newEpicId);
             }
             System.out.println(Arrays.asList(mapEpicKeys));
-            //            for (Subtask subtask : subtasks) {
-//                subtask.setEpicId(mapEpicKeys.get(subtask.getEpicId()));
-//                taskManager.addSubtask(subtask);
-//            }
+                        for (Subtask subtask : subtasks) {
+                subtask.setEpicId(mapEpicKeys.get(subtask.getEpicId()));
+                taskManager.addSubtask(subtask);
+            }
         } catch (FileNotFoundException e) {
             throw new ManagerSaveException("Файл для чтения не найден.");
         } catch (IOException e) {
