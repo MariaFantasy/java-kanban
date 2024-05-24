@@ -62,11 +62,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 taskManager.addTask(task);
             }
             HashMap<Integer, Integer> mapEpicKeys = new HashMap<>();
-//            for (Epic epic : epics) {
-//                int newEpicId = taskManager.addEpic(epic);
-//                mapEpicKeys.put(epic.getId(), newEpicId);
-//            }
-//            for (Subtask subtask : subtasks) {
+            for (Epic epic : epics) {
+                int newEpicId = taskManager.addEpic(epic);
+                mapEpicKeys.put(epic.getId(), newEpicId);
+            }
+            System.out.println(Arrays.asList(mapEpicKeys));
+            //            for (Subtask subtask : subtasks) {
 //                subtask.setEpicId(mapEpicKeys.get(subtask.getEpicId()));
 //                taskManager.addSubtask(subtask);
 //            }
