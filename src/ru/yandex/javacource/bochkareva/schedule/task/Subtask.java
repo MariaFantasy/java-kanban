@@ -17,7 +17,8 @@ public class Subtask extends Task implements Cloneable {
     }
 
     @Override
-    public String toString() {String result = super.getId() + ",SUBTASK," + super.getName() + "," + super.getStatus().toString();
+    public String toString() {
+        String result = super.getId() + ",SUBTASK," + super.getName() + "," + super.getStatus().toString();
 
         if (super.getDescription() != null) {
             result = result + "," + super.getDescription();
