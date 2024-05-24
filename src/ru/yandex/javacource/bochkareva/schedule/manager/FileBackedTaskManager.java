@@ -25,7 +25,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         this.filename = filename;
     }
 
-    static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file.getAbsolutePath());
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
