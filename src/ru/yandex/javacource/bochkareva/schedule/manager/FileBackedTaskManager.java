@@ -61,7 +61,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             for (Task task : tasks) {
                 taskManager.addTask(task);
             }
-//            HashMap<Integer, Integer> mapEpicKeys = new HashMap<>();
+            HashMap<Integer, Integer> mapEpicKeys = new HashMap<>();
 //            for (Epic epic : epics) {
 //                int newEpicId = taskManager.addEpic(epic);
 //                mapEpicKeys.put(epic.getId(), newEpicId);
