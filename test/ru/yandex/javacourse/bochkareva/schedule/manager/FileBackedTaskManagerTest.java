@@ -3,7 +3,6 @@ package ru.yandex.javacourse.bochkareva.schedule.manager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.bochkareva.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.bochkareva.schedule.manager.FileBackedTaskManager;
 import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
@@ -45,9 +44,7 @@ class FileBackedTaskManagerTest {
         Subtask subtask = new Subtask(task, epicId);
         int subtaskId = fileBackedTaskManager.addSubtask(subtask);
 
-        assertNotEquals(subtaskId,
-                epicId,
-                "В эпик можно добавить самого же себя как подзадачу.");
+        assertNotEquals(subtaskId, epicId, "В эпик можно добавить самого же себя как подзадачу.");
     }
 
     @Test
@@ -58,9 +55,7 @@ class FileBackedTaskManagerTest {
         Subtask subtask = new Subtask(task, epicId);
         int subtaskId = fileBackedTaskManager.addSubtask(subtask);
 
-        assertNotEquals(epicId,
-                subtaskId,
-                "В сабтаск можно добавить самого же себя как эпик.");
+        assertNotEquals(epicId, subtaskId, "В сабтаск можно добавить самого же себя как эпик.");
     }
 
     @Test
@@ -68,9 +63,7 @@ class FileBackedTaskManagerTest {
         int taskId = fileBackedTaskManager.addTask(task);
         Task calculatedTask = fileBackedTaskManager.getTask(taskId);
 
-        assertEquals(taskId,
-                calculatedTask.getId(),
-                "Неправильно добавляется Task в TaskManager.");
+        assertEquals(taskId, calculatedTask.getId(), "Неправильно добавляется Task в TaskManager.");
     }
 
     @Test
@@ -79,9 +72,7 @@ class FileBackedTaskManagerTest {
         int epicId = fileBackedTaskManager.addEpic(epic);
         Epic calculatedEpic = fileBackedTaskManager.getEpic(epicId);
 
-        assertEquals(epicId,
-                calculatedEpic.getId(),
-                "Неправильно добавляется Epic в TaskManager.");
+        assertEquals(epicId, calculatedEpic.getId(), "Неправильно добавляется Epic в TaskManager.");
     }
 
     @Test
@@ -92,9 +83,7 @@ class FileBackedTaskManagerTest {
         int subtaskId = fileBackedTaskManager.addSubtask(subtask);
         Subtask calculatedSubtask = fileBackedTaskManager.getSubtask(subtaskId);
 
-        assertEquals(subtaskId,
-                calculatedSubtask.getId(),
-                "Неправильно добавляется Subtask в TaskManager.");
+        assertEquals(subtaskId, calculatedSubtask.getId(), "Неправильно добавляется Subtask в TaskManager.");
     }
 
     @Test
@@ -102,9 +91,7 @@ class FileBackedTaskManagerTest {
         int taskId = fileBackedTaskManager.addTask(task.clone());
         task.setName("New Name");
 
-        assertNotEquals(fileBackedTaskManager.getTask(taskId).getName(),
-                task.getName(),
-                "Могу изменять параметры в таске, который был добавлен в менеджер.");
+        assertNotEquals(fileBackedTaskManager.getTask(taskId).getName(), task.getName(), "Могу изменять параметры в таске, который был добавлен в менеджер.");
     }
 
     @Test
@@ -115,9 +102,7 @@ class FileBackedTaskManagerTest {
         taskToChange.setName("Super new name");
         fileBackedTaskManager.updateTask(taskToChange);
 
-        assertEquals(expectedTask.getName(),
-                fileBackedTaskManager.getHistory().getLast().getName(),
-                "HistoryManager сохраняет не историю, а ссылки.");
+        assertEquals(expectedTask.getName(), fileBackedTaskManager.getHistory().getLast().getName(), "HistoryManager сохраняет не историю, а ссылки.");
     }
 
     @Test
@@ -129,9 +114,7 @@ class FileBackedTaskManagerTest {
         fileBackedTaskManager.getTask(taskId);
         fileBackedTaskManager.getTask(taskId);
 
-        assertEquals(expectedHistorySize,
-                fileBackedTaskManager.getHistory().size(),
-                "HistoryManager сохраняет уже добавленный ранее Таск.");
+        assertEquals(expectedHistorySize, fileBackedTaskManager.getHistory().size(), "HistoryManager сохраняет уже добавленный ранее Таск.");
     }
 
     @Test
@@ -147,9 +130,7 @@ class FileBackedTaskManagerTest {
 
         ArrayList<Integer> result = epicResult.getSubtaskIds();
 
-        assertEquals(0,
-                epicResult.getSubtaskIds().size(),
-                "Подзадачи из эпика не удаляются.");
+        assertEquals(0, epicResult.getSubtaskIds().size(), "Подзадачи из эпика не удаляются.");
     }
 
     @Test
@@ -159,9 +140,7 @@ class FileBackedTaskManagerTest {
         fileBackedTaskManager.clearSubtasks();
 
         try {
-            assertEquals(1,
-                    Files.lines(Paths.get(testFile.getAbsolutePath())).count(),
-                    "Пустой менеджер сохраняет непустой файл.");
+            assertEquals(1, Files.lines(Paths.get(testFile.getAbsolutePath())).count(), "Пустой менеджер сохраняет непустой файл.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -176,9 +155,7 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager newFileBackedTaskManager = FileBackedTaskManager.loadFromFile(testFile);
         int countTasks = newFileBackedTaskManager.getTasks().size() + newFileBackedTaskManager.getEpics().size() + newFileBackedTaskManager.getSubtasks().size();
 
-        assertEquals(0,
-                countTasks,
-                "Пустой файл дает непустой менеджер.");
+        assertEquals(0, countTasks, "Пустой файл дает непустой менеджер.");
     }
 
     @Test
@@ -198,7 +175,7 @@ class FileBackedTaskManagerTest {
         Epic epic1 = new Epic(taskToEpic1);
         int epic1Id = fileBackedTaskManager.addEpic(epic1);
 
-        Task taskToSubtask1= new Task(1, "Подзадача 1");
+        Task taskToSubtask1 = new Task(1, "Подзадача 1");
         Task taskToSubtask2 = new Task(1, "Подзадача 2");
         Task taskToSubtask3 = new Task(1, "Подзадача 3");
         Subtask subtask1Sprint7 = new Subtask(taskToSubtask1, epic1Id);
@@ -218,8 +195,6 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager newFileBackedTaskManager = FileBackedTaskManager.loadFromFile(testFile);
         int countTasks = newFileBackedTaskManager.getTasks().size() + newFileBackedTaskManager.getEpics().size() + newFileBackedTaskManager.getSubtasks().size();
 
-        assertEquals(7,
-                countTasks,
-                "Запись и чтение файлов реализовано неверно.");
+        assertEquals(7, countTasks, "Запись и чтение файлов реализовано неверно.");
     }
 }
