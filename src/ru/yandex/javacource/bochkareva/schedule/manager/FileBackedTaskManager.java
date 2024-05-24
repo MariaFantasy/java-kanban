@@ -1,5 +1,6 @@
 package ru.yandex.javacource.bochkareva.schedule.manager;
 
+import ru.yandex.javacource.bochkareva.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
@@ -33,7 +34,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 writer.write(subtask.toString() + "\n");
             }
         } catch (IOException e) {
-            System.out.println("Произошла ошибка во время записи файла.");
+            throw new ManagerSaveException("Произошла ошибка во время записи файла.");
         }
     }
 
