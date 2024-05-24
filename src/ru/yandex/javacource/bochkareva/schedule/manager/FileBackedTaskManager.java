@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -42,9 +41,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             while (fileReader.ready()) {
                 String newLine = fileReader.readLine();
                 String[] taskInfo = newLine.split(",", -1);
-                System.out.println(Arrays.toString(taskInfo));
                 Task newTask = new Task(Integer.parseInt(taskInfo[0]), taskInfo[2], taskInfo[4], TaskStatus.valueOf(taskInfo[3]));
-                System.out.println(taskInfo[0]);
                 switch (taskInfo[1]) {
                     case "TASK":
                         tasks.add(newTask);
