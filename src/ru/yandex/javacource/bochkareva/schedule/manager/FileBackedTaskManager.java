@@ -20,6 +20,7 @@ import java.util.HashMap;
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
     private File file;
+    private static final String HEADER = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(File file) {
         super();
@@ -80,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     private void save() {
         try (FileWriter writer = new FileWriter(file.getAbsolutePath())) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write(HEADER + "\n");
             for (Task task : super.getTasks()) {
                 writer.write(task.toString() + ",\n");
             }
