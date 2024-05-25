@@ -19,15 +19,15 @@ import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
-    private String filename;
+    private File file;
 
-    public FileBackedTaskManager(String filename) {
+    public FileBackedTaskManager(File file) {
         super();
-        this.filename = filename;
+        this.file = file;
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager taskManager = new FileBackedTaskManager(file.getAbsolutePath());
+        FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         if (!Files.exists(Paths.get(file.getAbsolutePath()))) {
             return taskManager;
@@ -79,7 +79,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private void save() {
-        try (FileWriter writer = new FileWriter(filename)) {
+        try (FileWriter writer = new FileWriter(file.getAbsolutePath())) {
             writer.write("id,type,name,status,description,epic\n");
             for (Task task : super.getTasks()) {
                 writer.write(task.toString() + ",\n");
@@ -170,8 +170,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         save();
     }
 
-    public static void main(String[] args) {
-        FileBackedTaskManager taskManager = new FileBackedTaskManager("C:\\Users\\PC#05\\Desktop\\Test Git\\mytest.txt");
+    public static void main(String[] args) throws IOException {
+        File file = new File("resources/task.csv");
+        FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         // Создаем две задачи
         Task task1Sprint7 = new Task(1, "Очень интересная задача 1");
@@ -201,7 +202,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         Epic epic2Sprint7 = new Epic(taskToEpic2Sprint7);
         int epic2IdSprint7 = taskManager.addEpic(epic2Sprint7);
 
-        FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(new File("C:\\Users\\PC#05\\Desktop\\Test Git\\mytest.txt"));
+        FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(file);
         printAllTasks(taskManager2);
     }
 

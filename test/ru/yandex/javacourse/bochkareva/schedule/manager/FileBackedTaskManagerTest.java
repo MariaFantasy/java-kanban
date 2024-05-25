@@ -28,7 +28,7 @@ class FileBackedTaskManagerTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        fileBackedTaskManager = new FileBackedTaskManager(testFile.getAbsolutePath());
+        fileBackedTaskManager = new FileBackedTaskManager(testFile);
     }
 
     @BeforeEach

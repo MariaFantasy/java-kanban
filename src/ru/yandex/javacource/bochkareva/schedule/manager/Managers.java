@@ -1,8 +1,10 @@
 package ru.yandex.javacource.bochkareva.schedule.manager;
 
+import java.io.File;
+
 public class Managers {
     public TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return new FileBackedTaskManager(new File("./resources/task.csv"));
     }
 
     public static  HistoryManager getDefaultHistory() {
