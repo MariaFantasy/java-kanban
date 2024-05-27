@@ -71,6 +71,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return taskManager;
     }
 
+    protected void addAnyTask(Task task) {
+        final int id  = task.getId();
+        switch (task.getType()) {
+            case TASK:
+                tasks.put(id, task);
+                break;
+            case EPIC:
+                epics.put(id, (Epic) task);
+                break;
+            case SUBTASK:
+                subtasks.put(id, (Subtask) task);
+                break;
+        }
+    }
+
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(HEADER);
