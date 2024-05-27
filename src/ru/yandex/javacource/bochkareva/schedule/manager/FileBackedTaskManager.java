@@ -8,8 +8,8 @@ import java.nio.file.Files;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    private File file;
     private static final String HEADER = "id,type,name,status,description,epic";
+    private File file;
 
     public FileBackedTaskManager(File file) {
         super();
