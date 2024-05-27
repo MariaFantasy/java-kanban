@@ -1,17 +1,9 @@
 package ru.yandex.javacource.bochkareva.schedule.manager;
 
 import ru.yandex.javacource.bochkareva.schedule.exceptions.ManagerSaveException;
-import ru.yandex.javacource.bochkareva.schedule.task.Epic;
-import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
-import ru.yandex.javacource.bochkareva.schedule.task.Task;
-import ru.yandex.javacource.bochkareva.schedule.task.TaskStatus;
+import ru.yandex.javacource.bochkareva.schedule.task.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -80,16 +72,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void save() {
-        try (FileWriter writer = new FileWriter(file.getAbsolutePath())) {
-            writer.write(HEADER + "\n");
-            for (Task task : super.getTasks()) {
-                writer.write(task.toString() + ",\n");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(HEADER);
+            writer.newLine();
+
+            for (Task task : tasks.values()) {
+                writer.write(CSVTaskFormat.toString(task));
+                writer.newLine();
             }
-            for (Epic epic : super.getEpics()) {
-                writer.write(epic.toString() + ",\n");
+            for (Epic epic : epics.values()) {
+                writer.write(CSVTaskFormat.toString(epic));
+                writer.newLine();
             }
-            for (Subtask subtask : super.getSubtasks()) {
-                writer.write(subtask.toString() + "\n");
+            for (Subtask subtask : subtasks.values()) {
+                writer.write(CSVTaskFormat.toString(subtask));
+                writer.newLine();
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла.");
