@@ -52,6 +52,10 @@ public class Task implements Cloneable {
         return status;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
