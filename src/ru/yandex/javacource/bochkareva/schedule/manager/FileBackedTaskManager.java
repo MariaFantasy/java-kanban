@@ -22,46 +22,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static FileBackedTaskManager loadFromFile(File file) {
         final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
-        if (!Files.exists(Paths.get(file.getAbsolutePath()))) {
-            return taskManager;
-        }
+        try {
+            final String csv = Files.readString(file.toPath());
+            final String[] lines = csv.split(System.lineSeparator());
+            int taskCounter = 0;
 
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(file.getAbsolutePath()))) {
-            String firstLine = fileReader.readLine();
-            ArrayList<Task> tasks = new ArrayList<>();
-            ArrayList<Epic> epics = new ArrayList<>();
-            ArrayList<Subtask> subtasks = new ArrayList<>();
-            while (fileReader.ready()) {
-                String newLine = fileReader.readLine();
-                String[] taskInfo = newLine.split(",", -1);
-                Task newTask = new Task(Integer.parseInt(taskInfo[0]), taskInfo[2], taskInfo[4], TaskStatus.valueOf(taskInfo[3]));
-                switch (taskInfo[1]) {
-                    case "TASK":
-                        tasks.add(newTask);
-                        break;
-                    case "EPIC":
-                        Epic newEpic = new Epic(newTask);
-                        epics.add(newEpic);
-                        break;
-                    case "SUBTASK":
-                        Subtask newSubtask = new Subtask(newTask, Integer.parseInt(taskInfo[5]));
-                        subtasks.add(newSubtask);
-                        break;
+            for (int i = 1; i < lines.length; i++) {
+                String line = lines[i];
+                if (line.isEmpty()) {
+                    break;
                 }
+                final Task task = taskFromString(line);
+                final int id = task.getId();
+                if (id > taskCounter) {
+                    taskCounter = id;
+                }
+                taskManager.addAnyTask(task);
             }
-            for (Task task : tasks) {
-                taskManager.addTask(task);
+            for(Subtask subtask : taskManager.subtasks.values()) {
+                final Epic epic = taskManager.epics.get(subtask.getEpicId());
+                epic.addSubtask(subtask.getId());
             }
-            HashMap<Integer, Integer> mapEpicKeys = new HashMap<>();
-            for (Epic epic : epics) {
-                int oldEpicId = epic.getId();
-                int newEpicId = taskManager.addEpic(epic);
-                mapEpicKeys.put(oldEpicId, newEpicId);
-            }
-            for (Subtask subtask : subtasks) {
-                subtask.setEpicId(mapEpicKeys.get(subtask.getEpicId()));
-                taskManager.addSubtask(subtask);
-            }
+            taskManager.taskCounter = taskCounter;
         } catch (FileNotFoundException e) {
             throw new ManagerSaveException("Файл для чтения не найден.");
         } catch (IOException e) {
