@@ -20,7 +20,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
+        final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         if (!Files.exists(Paths.get(file.getAbsolutePath()))) {
             return taskManager;
