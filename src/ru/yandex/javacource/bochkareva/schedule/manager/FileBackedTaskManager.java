@@ -71,6 +71,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return taskManager;
     }
 
+    public static Task taskFromString(String string) {
+        final String[] taskInfo = string.split(",", -1);
+        final int id = Integer.parseInt(taskInfo[0]);
+        final TaskType type = TaskType.valueOf(taskInfo[1]);
+        final String name = taskInfo[2];
+        final TaskStatus status = TaskStatus.valueOf(taskInfo[3]);
+        final String description = taskInfo[4];
+        if (type == TaskType.TASK) {
+            return new Task(id, name, description, status);
+        }
+        if (type == TaskType.EPIC) {
+            return new Epic(id, name, description, status);
+        }
+        final int epicId = Integer.parseInt(taskInfo[5]);
+        return new Subtask(id, name, description, status, epicId);
+    }
+
     protected void addAnyTask(Task task) {
         final int id  = task.getId();
         switch (task.getType()) {

@@ -9,6 +9,10 @@ public class Epic extends Task implements Cloneable {
         super(task);
     }
 
+    public Epic(int id, String name, String description, TaskStatus status) {
+        super(id, name, description, status);
+    }
+
     public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
         this.subtaskIds = subtaskIds;
     }
