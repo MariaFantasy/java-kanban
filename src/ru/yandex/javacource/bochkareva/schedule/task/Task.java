@@ -72,6 +72,15 @@ public class Task implements Cloneable {
         this.status = status;
     }
 
+    public static String toString(Task task) {
+        return task.getId() + ","
+                + task.getType() + ","
+                + task.getName() + ","
+                + task.getStatus() + ","
+                + task.getDescription() + ","
+                + (task.getType().equals(TaskType.SUBTASK) ? ((Subtask) task).getEpicId() : "");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
