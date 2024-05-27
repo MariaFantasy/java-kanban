@@ -23,15 +23,15 @@ public class Subtask extends Task implements Cloneable {
 
     @Override
     public String toString() {
-        String result = super.getId() + ",SUBTASK," + super.getName() + "," + super.getStatus().toString();
+        String result = "Subtask{" + "id='" + super.getId() + '\'' + ", parentTaskId='" + epicId + '\'' + ", name='" + super.getName() + '\'' + ", status='" + super.getStatus().toString() + '\'';
 
         if (super.getDescription() != null) {
-            result = result + "," + super.getDescription();
+            result = result + ", description.length=" + super.getDescription().length();
         } else {
-            result = result + ",";
+            result = result + ", description=null";
         }
 
-        return result + "," + epicId;
+        return result + '}';
     }
 
     @Override

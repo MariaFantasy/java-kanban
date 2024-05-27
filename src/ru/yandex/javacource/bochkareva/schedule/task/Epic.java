@@ -48,15 +48,21 @@ public class Epic extends Task implements Cloneable {
 
     @Override
     public String toString() {
-        String result = super.getId() + ",EPIC," + super.getName() + "," + super.getStatus().toString();
+        String result = "Epic{" + "id='" + super.getId() + '\'' + ", name='" + super.getName() + '\'' + ", status='" + super.getStatus().toString() + '\'';
 
         if (super.getDescription() != null) {
-            result = result + "," + super.getDescription();
+            result = result + ", description.length=" + super.getDescription().length();
         } else {
-            result = result + ",";
+            result = result + ", description=null";
         }
 
-        return result;
+        if (!subtaskIds.isEmpty()) {
+            result = result + ", subtasks.count=" + subtaskIds.size();
+        } else {
+            result = result + ", subtasks=null";
+        }
+
+        return result + '}';
     }
 
     @Override
