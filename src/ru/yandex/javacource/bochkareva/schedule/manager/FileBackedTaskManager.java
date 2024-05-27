@@ -5,9 +5,6 @@ import ru.yandex.javacource.bochkareva.schedule.task.*;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -39,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 taskManager.addAnyTask(task);
             }
-            for(Subtask subtask : taskManager.subtasks.values()) {
+            for (Subtask subtask : taskManager.subtasks.values()) {
                 final Epic epic = taskManager.epics.get(subtask.getEpicId());
                 epic.addSubtask(subtask.getId());
             }
