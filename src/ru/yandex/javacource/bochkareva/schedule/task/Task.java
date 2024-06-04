@@ -1,5 +1,7 @@
 package ru.yandex.javacource.bochkareva.schedule.task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task implements Cloneable {
@@ -7,6 +9,8 @@ public class Task implements Cloneable {
     private String name;
     private String description;
     private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(Task task) {
         this.id = task.getId();
@@ -56,6 +60,18 @@ public class Task implements Cloneable {
         return TaskType.TASK;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -70,6 +86,14 @@ public class Task implements Cloneable {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     @Override
