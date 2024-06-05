@@ -2,6 +2,8 @@ package ru.yandex.javacource.bochkareva.schedule.manager;
 
 import ru.yandex.javacource.bochkareva.schedule.task.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -197,11 +199,31 @@ public class InMemoryTaskManager implements TaskManager {
         int doneSubtasks = 0;
         int newSubtasks = 0;
         ArrayList<Subtask> subtasks = getSubtasksOfEpic(id);
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
+        Duration duration = Duration.ZERO;
         for (Subtask subtask : subtasks) {
             if (subtask.getStatus() == TaskStatus.DONE) {
                 doneSubtasks += 1;
             } else if (subtask.getStatus() == TaskStatus.NEW) {
                 newSubtasks += 1;
+            }
+            final LocalDateTime subtaskStartTime = subtask.getStartTime();
+            if (subtaskStartTime != null) {
+                if (startTime == null) {
+                    startTime = subtaskStartTime;
+                } else if (startTime.isAfter(subtaskStartTime)) {
+                    startTime = subtaskStartTime;
+                }
+                final LocalDateTime subtaskEndTime = subtask.getEndTime();
+                if (subtaskEndTime != null) {
+                    if (endTime == null) {
+                        endTime = subtaskEndTime;
+                    } else if (endTime.isBefore(subtaskEndTime)) {
+                        endTime = subtaskEndTime;
+                    }
+                    duration = duration.plus(subtask.getDuration());
+                }
             }
         }
         if (newSubtasks == subtasks.size()) {
@@ -211,6 +233,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
         }
+        epic.setStartTime(startTime);
+        epic.setEndTime(endTime);
+        epic.setDuration(duration);
     }
 
     @Override

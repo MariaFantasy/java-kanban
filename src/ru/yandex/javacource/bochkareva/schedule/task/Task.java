@@ -69,6 +69,9 @@ public class Task implements Cloneable {
     }
 
     public LocalDateTime getEndTime() {
+        if (duration == null) {
+            return null;
+        }
         return startTime.plus(duration);
     }
 

@@ -60,8 +60,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String name = taskInfo[2];
         final TaskStatus status = TaskStatus.valueOf(taskInfo[3]);
         final String description = taskInfo[4];
-        final LocalDateTime startTime = (!taskInfo[6].isEmpty() ? LocalDateTime.parse(taskInfo[6]) : null);
-        final LocalDateTime endTime = (!taskInfo[7].isEmpty() ? LocalDateTime.parse(taskInfo[7]) : null);
+        final LocalDateTime startTime = (!taskInfo[6].equals("null") ? LocalDateTime.parse(taskInfo[6]) : null);
+        final LocalDateTime endTime = (!taskInfo[7].equals("null") ? LocalDateTime.parse(taskInfo[7]) : null);
         final Duration duration = (!(startTime == null || endTime == null) ? Duration.between(startTime, endTime) : null);
         if (type == TaskType.TASK) {
             final Task task = new Task(id, name, description, status);
@@ -233,14 +233,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         task1Sprint7.setStartTime(LocalDateTime.now());
         taskManager.updateTask(task1Sprint7);
 
-        task1Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
         task1Sprint7.setStatus(TaskStatus.DONE);
+        task1Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
         taskManager.updateTask(task1Sprint7);
 
         task2Sprint7.setId(task2IdSprint7);
         task2Sprint7.setStatus(TaskStatus.IN_PROGRESS);
         task2Sprint7.setStartTime(LocalDateTime.now());
         taskManager.updateTask(task2Sprint7);
+
+        subtask1Sprint7.setId(subtask1IdSprint7);
+        subtask2Sprint7.setId(subtask2IdSprint7);
+        subtask3Sprint7.setId(subtask3IdSprint7);
+        subtask1Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        subtask2Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        subtask3Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        subtask1Sprint7.setStartTime(LocalDateTime.now());
+        subtask2Sprint7.setStartTime(LocalDateTime.now());
+        subtask3Sprint7.setStartTime(LocalDateTime.now());
+        taskManager.updateSubtask(subtask1Sprint7);
+        taskManager.updateSubtask(subtask2Sprint7);
+        taskManager.updateSubtask(subtask3Sprint7);
+
+        subtask1Sprint7.setStatus(TaskStatus.DONE);
+        subtask2Sprint7.setStatus(TaskStatus.DONE);
+        subtask3Sprint7.setStatus(TaskStatus.DONE);
+        subtask1Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
+        subtask2Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(2)));
+        subtask3Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(3)));
+        taskManager.updateSubtask(subtask1Sprint7);
+        taskManager.updateSubtask(subtask2Sprint7);
+        taskManager.updateSubtask(subtask3Sprint7);
 
         FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(file);
         printAllTasks(taskManager2);
