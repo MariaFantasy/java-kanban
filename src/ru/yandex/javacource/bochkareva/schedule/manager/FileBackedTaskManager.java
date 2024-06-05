@@ -5,6 +5,9 @@ import ru.yandex.javacource.bochkareva.schedule.task.*;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -57,14 +60,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String name = taskInfo[2];
         final TaskStatus status = TaskStatus.valueOf(taskInfo[3]);
         final String description = taskInfo[4];
+        final LocalDateTime startTime = (!taskInfo[6].isEmpty() ? LocalDateTime.parse(taskInfo[6]) : null);
+        final LocalDateTime endTime = (!taskInfo[7].isEmpty() ? LocalDateTime.parse(taskInfo[7]) : null);
+        final Duration duration = (!(startTime == null || endTime == null) ? Duration.between(startTime, endTime) : null);
         if (type == TaskType.TASK) {
-            return new Task(id, name, description, status);
+            final Task task = new Task(id, name, description, status);
+            task.setStartTime(startTime);
+            task.setDuration(duration);
+            return task;
         }
         if (type == TaskType.EPIC) {
-            return new Epic(id, name, description, status);
+            final Epic epic = new Epic(id, name, description, status);
+            epic.setStartTime(startTime);
+            epic.setEndTime(endTime);
+            epic.setDuration(duration);
+            return epic;
         }
         final int epicId = Integer.parseInt(taskInfo[5]);
-        return new Subtask(id, name, description, status, epicId);
+        final Subtask subtask = new Subtask(id, name, description, status, epicId);
+        subtask.setStartTime(startTime);
+        subtask.setDuration(duration);
+        return subtask;
     }
 
     protected void addAnyTask(Task task) {
@@ -210,6 +226,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Task taskToEpic2Sprint7 = new Task(1, "Задача-эпик 2");
         Epic epic2Sprint7 = new Epic(taskToEpic2Sprint7);
         int epic2IdSprint7 = taskManager.addEpic(epic2Sprint7);
+
+        // Меняем статусы задач
+        task1Sprint7.setId(task1IdSprint7);
+        task1Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        task1Sprint7.setStartTime(LocalDateTime.now());
+        taskManager.updateTask(task1Sprint7);
+
+        task1Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
+        task1Sprint7.setStatus(TaskStatus.DONE);
+        taskManager.updateTask(task1Sprint7);
+
+        task2Sprint7.setId(task2IdSprint7);
+        task2Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        task2Sprint7.setStartTime(LocalDateTime.now());
+        taskManager.updateTask(task2Sprint7);
 
         FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(file);
         printAllTasks(taskManager2);
