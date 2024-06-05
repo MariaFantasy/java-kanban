@@ -62,7 +62,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String description = taskInfo[4];
         final LocalDateTime startTime = (!taskInfo[6].equals("null") ? LocalDateTime.parse(taskInfo[6]) : null);
         final LocalDateTime endTime = (!taskInfo[7].equals("null") ? LocalDateTime.parse(taskInfo[7]) : null);
-        final Duration duration = (!(startTime == null || endTime == null) ? Duration.between(startTime, endTime) : null);
+        final Duration duration = (!taskInfo[8].equals("null") ? Duration.parse(taskInfo[8]) : null);
         if (type == TaskType.TASK) {
             final Task task = new Task(id, name, description, status);
             task.setStartTime(startTime);
