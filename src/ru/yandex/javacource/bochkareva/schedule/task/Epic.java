@@ -78,6 +78,10 @@ public class Epic extends Task implements Cloneable {
             result = result + ", subtasks=null";
         }
 
+        result = result + ", startTime=" + getStartTime();
+        result = result + ", endTime=" + getEndTime();
+        result = result + ", duration=" + getDuration();
+
         return result + '}';
     }
 

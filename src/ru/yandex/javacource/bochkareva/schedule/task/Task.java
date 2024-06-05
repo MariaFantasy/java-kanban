@@ -129,6 +129,10 @@ public class Task implements Cloneable {
             result = result + ", description=null";
         }
 
+        result = result + ", startTime=" + getStartTime();
+        result = result + ", endTime=" + getEndTime();
+        result = result + ", duration=" + getDuration();
+
         return result + '}';
     }
 
