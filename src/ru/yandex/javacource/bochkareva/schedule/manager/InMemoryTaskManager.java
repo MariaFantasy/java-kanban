@@ -26,6 +26,11 @@ public class InMemoryTaskManager implements TaskManager {
         taskCounter = 0;
     }
 
+    private void addTaskToPrioritizedTasks(int id) {
+        if (getTaskById(id).getStartTime() != null) {
+            prioritizedTasks.add(id);
+        }
+    }
     @Override
     public Integer addTask(Task task) {
         if (task == null) {
@@ -34,7 +39,7 @@ public class InMemoryTaskManager implements TaskManager {
         int id = ++taskCounter;
         task.setId(id);
         tasks.put(id, task);
-        prioritizedTasks.add(id);
+        addTaskToPrioritizedTasks(id);
         return id;
     }
 
@@ -66,7 +71,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(id, newSubtask);
         epic.addSubtask(id);
         updateEpic(epic.getId());
-        prioritizedTasks.add(id);
+        addTaskToPrioritizedTasks(id);
         return id;
     }
 
@@ -177,7 +182,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         tasks.put(id, task);
         prioritizedTasks.remove(id);
-        prioritizedTasks.add(id);
+        addTaskToPrioritizedTasks(id);
     }
 
     @Override
@@ -213,7 +218,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(id, subtask);
         updateEpic(epicId);
         prioritizedTasks.remove(id);
-        prioritizedTasks.add(id);
+        addTaskToPrioritizedTasks(id);
     }
 
     private void updateEpic(int id) {
