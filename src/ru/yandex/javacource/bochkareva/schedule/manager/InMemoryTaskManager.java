@@ -31,10 +31,51 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(id);
         }
     }
+
+    private boolean isIntersection(Task task1, Task task2) {
+        final LocalDateTime start1 = task1.getStartTime();
+        final LocalDateTime end1 = task1.getEndTime();
+        final LocalDateTime start2 = task2.getStartTime();
+        final LocalDateTime end2 = task2.getEndTime();
+
+        if (start1 == null || start2 == null) {
+            return false;
+        }
+        if (end1 == null && end2 == null) {
+            return true;
+        }
+        if (end1 == null && start1.isBefore(end2)) {
+            return true;
+        }
+        if (end2 == null && start2.isBefore(end1)) {
+            return true;
+        }
+        if (start1.isBefore(end2) && start2.isBefore(end1)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validateTask(Task task) {
+        List<Task> tasks = getPrioritizedTasks();
+        Optional<Task> result = tasks.stream()
+            .filter(prioritizedTask -> isIntersection(prioritizedTask, task))
+            .findAny();
+        return result.isPresent();
+    }
+
     @Override
     public Integer addTask(Task task) {
         if (task == null) {
             return null;
+        }
+        try {
+            if (!validateTask(task)) {
+                throw new Exception("Задачи пересекаются");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return -1;
         }
         int id = ++taskCounter;
         task.setId(id);
@@ -60,6 +101,14 @@ public class InMemoryTaskManager implements TaskManager {
     public Integer addSubtask(Subtask subtask) {
         if (subtask == null) {
             return null;
+        }
+        try {
+            if (!validateTask(subtask)) {
+                throw new Exception("Задачи пересекаются");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return -1;
         }
         Epic epic = epics.get(subtask.getEpicId());
         if (epic == null) {
@@ -175,6 +224,14 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null) {
             return;
         }
+        try {
+            if (!validateTask(task)) {
+                throw new Exception("Задачи пересекаются");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         int id = task.getId();
         Task savedTask = tasks.get(id);
         if (savedTask == null) {
@@ -203,6 +260,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtask == null) {
+            return;
+        }
+        try {
+            if (!validateTask(subtask)) {
+                throw new Exception("Задачи пересекаются");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return;
         }
         int id = subtask.getId();
