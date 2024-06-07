@@ -35,15 +35,9 @@ public class Main {
         Subtask subtask3 = new Subtask(taskToSubtask3, epicId);
         taskManager.addSubtask(subtask3);
 
-        for (Task task : taskManager.getTasks()) {
-            System.out.println(task);
-        }
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        taskManager.getTasks().stream().peek(System.out::println);
+        taskManager.getEpics().stream().peek(System.out::println);
+        taskManager.getSubtasks().stream().peek(System.out::println);
 
         System.out.println("---------------------------------------");
         System.out.println("Обновление статусов:");
@@ -52,9 +46,7 @@ public class Main {
         task2.setStatus(TaskStatus.DONE);
         taskManager.updateTask(task1);
         taskManager.updateTask(task2);
-        for (Task task : taskManager.getTasks()) {
-            System.out.println(task);
-        }
+        taskManager.getTasks().stream().peek(System.out::println);
 
         System.out.println("--------------");
 
@@ -62,70 +54,46 @@ public class Main {
         epic2.setStatus(TaskStatus.DONE);
         taskManager.updateEpic(epic1);
         taskManager.updateEpic(epic2);
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
+        taskManager.getEpics().stream().peek(System.out::println);
 
         System.out.println("--------------");
         subtask1.setStatus(TaskStatus.IN_PROGRESS);
         taskManager.updateSubtask(subtask1);
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
+        taskManager.getEpics().stream().peek(System.out::println);
 
         System.out.println("--------------");
         subtask2.setStatus(TaskStatus.DONE);
         subtask3.setStatus(TaskStatus.DONE);
         taskManager.updateSubtask(subtask2);
         taskManager.updateSubtask(subtask3);
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        taskManager.getEpics().stream().peek(System.out::println);
+        taskManager.getSubtasks().stream().peek(System.out::println);
 
         System.out.println("---------------------------------------");
         System.out.println("Удаление задач:");
         taskManager.deleteTaskById(1);
-        for (Task task : taskManager.getTasks()) {
-            System.out.println(task);
-        }
+        taskManager.getTasks().stream().peek(System.out::println);
 
         System.out.println("---------------------------------------");
         System.out.println("Удаление эпиков:");
         taskManager.deleteEpicById(6);
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        taskManager.getEpics().stream().peek(System.out::println);
+        taskManager.getSubtasks().stream().peek(System.out::println);
 
         System.out.println("---------------------------------------");
         System.out.println("Удаление подзадач:");
         taskManager.deleteSubtaskById(4);
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        taskManager.getEpics().stream().peek(System.out::println);
+        taskManager.getSubtasks().stream().peek(System.out::println);
 
         System.out.println("---------------------------------------");
         System.out.println("Удаление несуществующих задач, эпиков и подзадач:");
         taskManager.deleteTaskById(10);
         taskManager.deleteEpicById(10);
         taskManager.deleteSubtaskById(10);
-        for (Task task : taskManager.getTasks()) {
-            System.out.println(task);
-        }
-        for (Epic epic : taskManager.getEpics()) {
-            System.out.println(epic);
-        }
-        for (Subtask subtask : taskManager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        taskManager.getTasks().stream().peek(System.out::println);
+        taskManager.getEpics().stream().peek(System.out::println);
+        taskManager.getSubtasks().stream().peek(System.out::println);
 
         System.out.println("---------------------------------------");
         printAllTasks(taskManager);
@@ -173,9 +141,7 @@ public class Main {
         taskManagerSprint6.getSubtask(subtask3IdSprint6);
 
         System.out.println("Печатаем историю:");
-        for (Task task : taskManagerSprint6.getHistory()) {
-            System.out.println(task);
-        }
+        taskManagerSprint6.getHistory().stream().peek(System.out::println);
 
         taskManagerSprint6.getSubtask(subtask2IdSprint6);
         taskManagerSprint6.getTask(task1IdSprint6);
@@ -184,18 +150,14 @@ public class Main {
         taskManagerSprint6.getEpic(epic2IdSprint6);
 
         System.out.println("Печатаем историю:");
-        for (Task task : taskManagerSprint6.getHistory()) {
-            System.out.println(task);
-        }
+        taskManagerSprint6.getHistory().stream().peek(System.out::println);
 
         taskManagerSprint6.deleteTaskById(task1IdSprint6);
         taskManagerSprint6.deleteEpicById(epic2IdSprint6);
         taskManagerSprint6.deleteSubtaskById(subtask2IdSprint6);
 
         System.out.println("Печатаем историю:");
-        for (Task task : taskManagerSprint6.getHistory()) {
-            System.out.println(task);
-        }
+        taskManagerSprint6.getHistory().stream().peek(System.out::println);
 
         taskManagerSprint6.deleteEpicById(epic1IdSprint6);
 
@@ -204,25 +166,15 @@ public class Main {
 
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Task epic : manager.getEpics()) {
-            System.out.println(epic);
+        manager.getTasks().stream().peek(System.out::println);
 
-            for (Task task : manager.getSubtasksOfEpic(epic.getId())) {
-                System.out.println("--> " + task);
-            }
-        }
+        System.out.println("Эпики:");
+        manager.getEpics().stream().peek(System.out::println);
+
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        manager.getSubtasks().stream().peek(System.out::println);
 
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
+        manager.getHistory().stream().peek(System.out::println);
     }
 }
