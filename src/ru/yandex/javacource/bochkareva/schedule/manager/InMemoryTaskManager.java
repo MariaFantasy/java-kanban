@@ -70,7 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
             return null;
         }
         try {
-            if (!validateTask(task)) {
+            if (validateTask(task)) {
                 throw new Exception("Задачи пересекаются");
             }
         } catch (Exception e) {
@@ -139,7 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         epic.getSubtaskIds().stream()
             .peek(subtasks::remove)
-            .peek(historyManager::remove);
+            .forEach(historyManager::remove);
         epics.remove(id);
         historyManager.remove(id);
     }
@@ -160,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTasks() {
-        tasks.keySet().stream().peek(prioritizedTasks::remove);
+        tasks.keySet().stream().forEach(prioritizedTasks::remove);
         tasks.clear();
     }
 
@@ -172,11 +172,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubtasks() {
-        subtasks.keySet().stream().peek(prioritizedTasks::remove);
+        subtasks.keySet().stream().forEach(prioritizedTasks::remove);
         epics.values().stream()
             .peek(Epic::clear)
             .map(Task::getId)
-            .peek(this::updateEpic);
+            .forEach(this::updateEpic);
         subtasks.clear();
     }
 
@@ -218,7 +218,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         try {
-            if (!validateTask(task)) {
+            if (validateTask(task)) {
                 throw new Exception("Задачи пересекаются");
             }
         } catch (Exception e) {
