@@ -38,21 +38,21 @@ public class InMemoryTaskManager implements TaskManager {
         final LocalDateTime start2 = task2.getStartTime();
         final LocalDateTime end2 = task2.getEndTime();
 
-        if (start1 == null || start2 == null) {
-            return false;
-        }
-        if (end1 == null && end2 == null) {
-            return true;
-        }
-        if (end1 == null && start1.isBefore(end2)) {
-            return true;
-        }
-        if (end2 == null && start2.isBefore(end1)) {
-            return true;
-        }
-        if (start1.isBefore(end2) && start2.isBefore(end1)) {
-            return true;
-        }
+//        if (start1 == null || start2 == null) {
+//            return false;
+//        }
+//        if (end1 == null && end2 == null) {
+//            return true;
+//        }
+//        if (end1 == null && start1.isBefore(end2)) {
+//            return true;
+//        }
+//        if (end2 == null && start2.isBefore(end1)) {
+//            return true;
+//        }
+//        if (start1.isBefore(end2) && start2.isBefore(end1)) {
+//            return true;
+//        }
         return false;
     }
 
@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
             return null;
         }
         try {
-            if (!validateTask(subtask)) {
+            if (validateTask(subtask)) {
                 throw new Exception("Задачи пересекаются");
             }
         } catch (Exception e) {
@@ -137,10 +137,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic == null) {
             return;
         }
-        for (int subtaskId : epic.getSubtaskIds()) {
-            subtasks.remove(subtaskId);
-            historyManager.remove(subtaskId);
-        }
+        epic.getSubtaskIds().stream()
+            .peek(subtasks::remove)
+            .peek(historyManager::remove);
         epics.remove(id);
         historyManager.remove(id);
     }
@@ -161,9 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTasks() {
-        for (Integer taskId : tasks.keySet()) {
-            prioritizedTasks.remove(taskId);
-        }
+        tasks.keySet().stream().peek(prioritizedTasks::remove);
         tasks.clear();
     }
 
@@ -175,13 +172,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubtasks() {
-        for (Integer taskId : subtasks.keySet()) {
-            prioritizedTasks.remove(taskId);
-        }
-        for (Epic epic : epics.values()) {
-            epic.clear();
-            updateEpic(epic.getId());
-        }
+        subtasks.keySet().stream().peek(prioritizedTasks::remove);
+        epics.values().stream()
+            .peek(Epic::clear)
+            .map(Task::getId)
+            .peek(this::updateEpic);
         subtasks.clear();
     }
 
@@ -207,16 +202,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasksOfEpic(int id) {
+    public List<Subtask> getSubtasksOfEpic(int id) {
         Epic epic = epics.get(id);
         if (epic == null) {
             return null;
         }
-        ArrayList<Subtask> result = new ArrayList<>();
-        for (int subtaskId : epic.getSubtaskIds()) {
-            result.add(subtasks.get(subtaskId));
-        }
-        return result;
+        return epic.getSubtaskIds().stream()
+            .map(subtasks::get)
+            .toList();
     }
 
     @Override
@@ -263,7 +256,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         try {
-            if (!validateTask(subtask)) {
+            if (validateTask(subtask)) {
                 throw new Exception("Задачи пересекаются");
             }
         } catch (Exception e) {
@@ -293,7 +286,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         int doneSubtasks = 0;
         int newSubtasks = 0;
-        ArrayList<Subtask> subtasks = getSubtasksOfEpic(id);
+        List<Subtask> subtasks = getSubtasksOfEpic(id);
         LocalDateTime startTime = null;
         LocalDateTime endTime = null;
         Duration duration = Duration.ZERO;

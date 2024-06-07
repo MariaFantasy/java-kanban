@@ -1,1 +1,3 @@
 id,type,name,status,description,epic
+2,SUBTASK,Подзадача 1,NEW,null,1,null,null,null
+4,SUBTASK,Подзадача 3,NEW,null,1,null,null,null
