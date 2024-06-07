@@ -39,9 +39,7 @@ public class Epic extends Task implements Cloneable {
         if (subtasks == null) {
             return;
         }
-        for (int subtaskId : subtasks) {
-            addSubtask(subtaskId);
-        }
+        subtasks.stream().forEach(this::addSubtask);
     }
 
     public void deleteTaskById(Integer id) {
