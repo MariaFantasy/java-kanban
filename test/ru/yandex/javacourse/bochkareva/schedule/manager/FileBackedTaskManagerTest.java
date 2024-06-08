@@ -62,7 +62,7 @@ class FileBackedTaskManagerTest {
     @Test
     public void shouldBeAbleToAddTaskAndFindIt() {
         int taskId = fileBackedTaskManager.addTask(task);
-        Task calculatedTask = fileBackedTaskManager.getTask(taskId);
+        Task calculatedTask = fileBackedTaskManager.getTask(taskId).get();
 
         assertEquals(taskId, calculatedTask.getId(), "Неправильно добавляется Task в TaskManager.");
     }
@@ -71,7 +71,7 @@ class FileBackedTaskManagerTest {
     public void shouldBeAbleToAddEpicAndFindIt() {
         Epic epic = new Epic(task);
         int epicId = fileBackedTaskManager.addEpic(epic);
-        Epic calculatedEpic = fileBackedTaskManager.getEpic(epicId);
+        Epic calculatedEpic = fileBackedTaskManager.getEpic(epicId).get();
 
         assertEquals(epicId, calculatedEpic.getId(), "Неправильно добавляется Epic в TaskManager.");
     }
@@ -82,7 +82,7 @@ class FileBackedTaskManagerTest {
         int epicId = fileBackedTaskManager.addEpic(epic);
         Subtask subtask = new Subtask(task, epicId);
         int subtaskId = fileBackedTaskManager.addSubtask(subtask);
-        Subtask calculatedSubtask = fileBackedTaskManager.getSubtask(subtaskId);
+        Subtask calculatedSubtask = fileBackedTaskManager.getSubtask(subtaskId).get();
 
         assertEquals(subtaskId, calculatedSubtask.getId(), "Неправильно добавляется Subtask в TaskManager.");
     }
@@ -92,13 +92,13 @@ class FileBackedTaskManagerTest {
         int taskId = fileBackedTaskManager.addTask(task.clone());
         task.setName("New Name");
 
-        assertNotEquals(fileBackedTaskManager.getTask(taskId).getName(), task.getName(), "Могу изменять параметры в таске, который был добавлен в менеджер.");
+        assertNotEquals(fileBackedTaskManager.getTask(taskId).get().getName(), task.getName(), "Могу изменять параметры в таске, который был добавлен в менеджер.");
     }
 
     @Test
     public void shouldHistoryManagerSaveOldTaskVersion() {
         int taskId = fileBackedTaskManager.addTask(task);
-        Task expectedTask = fileBackedTaskManager.getTaskById(taskId);
+        Task expectedTask = fileBackedTaskManager.getTaskById(taskId).get();
         Task taskToChange = new Task(expectedTask);
         taskToChange.setName("Super new name");
         fileBackedTaskManager.updateTask(taskToChange);
@@ -127,7 +127,7 @@ class FileBackedTaskManagerTest {
         int subtaskId = fileBackedTaskManager.addSubtask(subtask);
 
         fileBackedTaskManager.deleteSubtaskById(subtaskId);
-        Epic epicResult = fileBackedTaskManager.getEpic(epicId);
+        Epic epicResult = fileBackedTaskManager.getEpic(epicId).get();
 
         ArrayList<Integer> result = epicResult.getSubtaskIds();
 

@@ -14,8 +14,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final TreeSet<Integer> prioritizedTasks = new TreeSet<>(new Comparator<Integer>() {
         @Override
         public int compare(Integer id1, Integer id2) {
-            final Task task1 = getTaskById(id1);
-            final Task task2 = getTaskById(id2);
+            final Task task1 = getTaskById(id1).get();
+            final Task task2 = getTaskById(id2).get();
             return task1.getStartTime().compareTo(task2.getStartTime());
         }
     });
@@ -209,6 +209,8 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getPrioritizedTasks() {
         return prioritizedTasks.stream()
                 .map(this::getTaskById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .toList();
     }
 
@@ -329,40 +331,49 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id) {
+    public Optional<Task> getTask(int id) {
         Task task = tasks.get(id);
+        if (task == null) {
+            return Optional.empty();
+        }
         historyManager.add(task);
-        return task;
+        return Optional.of(task);
     }
 
     @Override
-    public Epic getEpic(int id) {
+    public Optional<Epic> getEpic(int id) {
         Epic epic = epics.get(id);
+        if (epic == null) {
+            return Optional.empty();
+        }
         historyManager.add(epic);
-        return epic;
+        return Optional.of(epic);
     }
 
     @Override
-    public Subtask getSubtask(int id) {
+    public Optional<Subtask> getSubtask(int id) {
         Subtask subtask = subtasks.get(id);
+        if (subtask == null) {
+            return Optional.empty();
+        }
         historyManager.add(subtask);
-        return subtask;
+        return Optional.of(subtask);
     }
 
     @Override
-    public Task getTaskById(int id) {
+    public Optional<Task> getTaskById(int id) {
         Task task = tasks.get(id);
         if (task == null) {
             task = epics.get(id);
             if (task == null) {
                 task = subtasks.get(id);
                 if (task == null) {
-                    return null;
+                    return Optional.empty();
                 }
             }
         }
         historyManager.add(task);
-        return task;
+        return Optional.of(task);
     }
 
     public List<Task> getHistory() {
