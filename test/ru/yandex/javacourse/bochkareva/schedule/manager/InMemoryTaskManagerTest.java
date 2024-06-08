@@ -7,6 +7,7 @@ import ru.yandex.javacource.bochkareva.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
+import ru.yandex.javacource.bochkareva.schedule.task.TaskStatus;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -141,5 +142,109 @@ class InMemoryTaskManagerTest {
         assertEquals(0,
                 epicResult.getSubtaskIds().size(),
                 "Подзадачи из эпика не удаляются.");
+    }
+
+    @Test
+    public void shouldBeNewEpicIfAllSubtasksNew() {
+        Task taskToEpic = new Task(1, "Задача-эпик");
+        Epic epic = new Epic(taskToEpic);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Task taskToSubtask1 = new Task(1, "Подзадача 1");
+        Task taskToSubtask2 = new Task(1, "Подзадача 2");
+        Task taskToSubtask3 = new Task(1, "Подзадача 3");
+        Subtask subtask1 = new Subtask(taskToSubtask1, epicId);
+        Subtask subtask2 = new Subtask(taskToSubtask2, epicId);
+        Subtask subtask3 = new Subtask(taskToSubtask3, epicId);
+
+        subtask1.setStatus(TaskStatus.NEW);
+        subtask2.setStatus(TaskStatus.NEW);
+        subtask3.setStatus(TaskStatus.NEW);
+
+        int subtask1Id = inMemoryTaskManager.addSubtask(subtask1);
+        int subtask2Id = inMemoryTaskManager.addSubtask(subtask2);
+        int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
+
+        assertEquals(TaskStatus.NEW,
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
+                "Неверно определяется статус для эпика - NEW.");
+    }
+
+    @Test
+    public void shouldBeDoneEpicIfAllSubtasksDone() {
+        Task taskToEpic = new Task(1, "Задача-эпик");
+        Epic epic = new Epic(taskToEpic);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Task taskToSubtask1 = new Task(1, "Подзадача 1");
+        Task taskToSubtask2 = new Task(1, "Подзадача 2");
+        Task taskToSubtask3 = new Task(1, "Подзадача 3");
+        Subtask subtask1 = new Subtask(taskToSubtask1, epicId);
+        Subtask subtask2 = new Subtask(taskToSubtask2, epicId);
+        Subtask subtask3 = new Subtask(taskToSubtask3, epicId);
+
+        subtask1.setStatus(TaskStatus.DONE);
+        subtask2.setStatus(TaskStatus.DONE);
+        subtask3.setStatus(TaskStatus.DONE);
+
+        int subtask1Id = inMemoryTaskManager.addSubtask(subtask1);
+        int subtask2Id = inMemoryTaskManager.addSubtask(subtask2);
+        int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
+
+        assertEquals(TaskStatus.DONE,
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
+                "Неверно определяется статус для эпика - DONE.");
+    }
+
+    @Test
+    public void shouldBeInProgressEpicIfSubtasksInDoneAndNew() {
+        Task taskToEpic = new Task(1, "Задача-эпик");
+        Epic epic = new Epic(taskToEpic);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Task taskToSubtask1 = new Task(1, "Подзадача 1");
+        Task taskToSubtask2 = new Task(1, "Подзадача 2");
+        Task taskToSubtask3 = new Task(1, "Подзадача 3");
+        Subtask subtask1 = new Subtask(taskToSubtask1, epicId);
+        Subtask subtask2 = new Subtask(taskToSubtask2, epicId);
+        Subtask subtask3 = new Subtask(taskToSubtask3, epicId);
+
+        subtask1.setStatus(TaskStatus.DONE);
+        subtask2.setStatus(TaskStatus.NEW);
+        subtask3.setStatus(TaskStatus.NEW);
+
+        int subtask1Id = inMemoryTaskManager.addSubtask(subtask1);
+        int subtask2Id = inMemoryTaskManager.addSubtask(subtask2);
+        int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
+
+        assertEquals(TaskStatus.IN_PROGRESS,
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
+                "Неверно определяется статус для эпика - IN_PROGRESS.");
+    }
+
+    @Test
+    public void shouldBeInProgressEpicIfAllSubtasksInProgress() {
+        Task taskToEpic = new Task(1, "Задача-эпик");
+        Epic epic = new Epic(taskToEpic);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Task taskToSubtask1 = new Task(1, "Подзадача 1");
+        Task taskToSubtask2 = new Task(1, "Подзадача 2");
+        Task taskToSubtask3 = new Task(1, "Подзадача 3");
+        Subtask subtask1 = new Subtask(taskToSubtask1, epicId);
+        Subtask subtask2 = new Subtask(taskToSubtask2, epicId);
+        Subtask subtask3 = new Subtask(taskToSubtask3, epicId);
+
+        subtask1.setStatus(TaskStatus.IN_PROGRESS);
+        subtask2.setStatus(TaskStatus.IN_PROGRESS);
+        subtask3.setStatus(TaskStatus.IN_PROGRESS);
+
+        int subtask1Id = inMemoryTaskManager.addSubtask(subtask1);
+        int subtask2Id = inMemoryTaskManager.addSubtask(subtask2);
+        int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
+
+        assertEquals(TaskStatus.IN_PROGRESS,
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
+                "Неверно определяется статус для эпика - IN_PROGRESS.");
     }
 }
