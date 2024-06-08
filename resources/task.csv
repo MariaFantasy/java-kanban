@@ -1,2 +1,8 @@
 id,type,name,status,description,epic
-2,TASK,Очень интересная задача 2,NEW,null,,null,null,null
+1,TASK,Очень интересная задача 1,DONE,null,,2024-06-08T19:37:35.943710500,2024-06-09T19:37:35.943710500,PT24H
+2,TASK,Очень интересная задача 2,IN_PROGRESS,null,,2024-06-08T19:37:35.945710,null,null
+3,EPIC,Задача-эпик 1,NEW,null,,null,null,null
+7,EPIC,Задача-эпик 2,NEW,null,,null,null,null
+4,SUBTASK,Подзадача 1,NEW,null,3,null,null,null
+5,SUBTASK,Подзадача 2,NEW,null,3,null,null,null
+6,SUBTASK,Подзадача 3,NEW,null,3,null,null,null

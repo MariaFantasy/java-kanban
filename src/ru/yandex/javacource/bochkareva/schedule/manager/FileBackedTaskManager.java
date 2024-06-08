@@ -39,10 +39,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 taskManager.addAnyTask(task);
             }
-            for (Subtask subtask : taskManager.subtasks.values()) {
-                final Epic epic = taskManager.epics.get(subtask.getEpicId());
-                epic.addSubtask(subtask.getId());
-            }
+            taskManager.subtasks.values().stream()
+                    .forEach(subtask -> {
+                        final Epic epic = taskManager.epics.get(subtask.getEpicId());
+                        epic.addSubtask(subtask.getId());
+                    });
             taskManager.taskCounter = taskCounter;
         } catch (FileNotFoundException e) {
             throw new ManagerSaveException("Файл для чтения не найден.");
@@ -103,18 +104,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write(HEADER);
             writer.newLine();
 
-            for (Task task : tasks.values()) {
-                writer.write(CSVTaskFormat.toString(task));
-                writer.newLine();
-            }
-            for (Epic epic : epics.values()) {
-                writer.write(CSVTaskFormat.toString(epic));
-                writer.newLine();
-            }
-            for (Subtask subtask : subtasks.values()) {
-                writer.write(CSVTaskFormat.toString(subtask));
-                writer.newLine();
-            }
+            tasks.values().stream()
+                .map(CSVTaskFormat::toString)
+                .forEach(string -> {
+                    try {
+                        writer.write(string);
+                        writer.newLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            epics.values().stream()
+                    .map(CSVTaskFormat::toString)
+                    .forEach(string -> {
+                        try {
+                            writer.write(string);
+                            writer.newLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+            subtasks.values().stream()
+                    .map(CSVTaskFormat::toString)
+                    .forEach(string -> {
+                        try {
+                            writer.write(string);
+                            writer.newLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла.");
         }
@@ -271,25 +290,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Task epic : manager.getEpics()) {
-            System.out.println(epic);
+        manager.getTasks().stream().forEach(System.out::println);
 
-            for (Task task : manager.getSubtasksOfEpic(epic.getId())) {
-                System.out.println("--> " + task);
-            }
-        }
+        System.out.println("Эпики:");
+        manager.getEpics().stream().forEach(System.out::println);
+
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        manager.getSubtasks().stream().forEach(System.out::println);
 
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
+        manager.getHistory().stream().forEach(System.out::println);
     }
 }
