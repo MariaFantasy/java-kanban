@@ -27,7 +27,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void addTaskToPrioritizedTasks(int id) {
-        if (getTaskById(id).getStartTime() != null) {
+        Task task = tasks.get(id);
+        if (task == null) {
+            task = epics.get(id);
+            if (task == null) {
+                task = subtasks.get(id);
+            }
+        }
+        if (task == null) {
+            return;
+        }
+
+        if (task.getStartTime() != null) {
             prioritizedTasks.add(id);
         }
     }
@@ -284,36 +295,11 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic == null) {
             return;
         }
-        int doneSubtasks = 0;
-        int newSubtasks = 0;
         List<Subtask> subtasks = getSubtasksOfEpic(id);
-        LocalDateTime startTime = null;
-        LocalDateTime endTime = null;
-        Duration duration = Duration.ZERO;
-        for (Subtask subtask : subtasks) {
-            if (subtask.getStatus() == TaskStatus.DONE) {
-                doneSubtasks += 1;
-            } else if (subtask.getStatus() == TaskStatus.NEW) {
-                newSubtasks += 1;
-            }
-            final LocalDateTime subtaskStartTime = subtask.getStartTime();
-            if (subtaskStartTime != null) {
-                if (startTime == null) {
-                    startTime = subtaskStartTime;
-                } else if (startTime.isAfter(subtaskStartTime)) {
-                    startTime = subtaskStartTime;
-                }
-                final LocalDateTime subtaskEndTime = subtask.getEndTime();
-                if (subtaskEndTime != null) {
-                    if (endTime == null) {
-                        endTime = subtaskEndTime;
-                    } else if (endTime.isBefore(subtaskEndTime)) {
-                        endTime = subtaskEndTime;
-                    }
-                    duration = duration.plus(subtask.getDuration());
-                }
-            }
-        }
+
+        int doneSubtasks = (int) subtasks.stream().filter(subtask -> subtask.getStatus() == TaskStatus.DONE).count();
+        int newSubtasks = (int) subtasks.stream().filter(subtask -> subtask.getStatus() == TaskStatus.NEW).count();
+
         if (newSubtasks == subtasks.size()) {
             epic.setStatus(TaskStatus.NEW);
         } else if (doneSubtasks == subtasks.size()) {
@@ -321,9 +307,25 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
         }
-        epic.setStartTime(startTime);
-        epic.setEndTime(endTime);
-        epic.setDuration(duration);
+
+        subtasks.stream()
+                .map(Task::getStartTime)
+                .filter(Objects::nonNull)
+                .sorted()
+                .findFirst()
+                .ifPresent(epic::setStartTime);
+
+        subtasks.stream()
+                .map(Task::getEndTime)
+                .filter(Objects::nonNull)
+                .sorted(Comparator.reverseOrder())
+                .findFirst()
+                .ifPresent(epic::setEndTime);
+
+        epic.setDuration(subtasks.stream()
+                .map(Task::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, Duration::plus));
     }
 
     @Override
