@@ -247,4 +247,36 @@ class InMemoryTaskManagerTest {
                 inMemoryTaskManager.getTaskById(epicId).getStatus(),
                 "Неверно определяется статус для эпика - IN_PROGRESS.");
     }
+
+    @Test
+    public void ShouldBeExistEpicForExistedSubtask() {
+        Task taskToEpic = new Task(1, "Задача-эпик");
+        Epic epic = new Epic(taskToEpic);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Task taskToSubtask = new Task(1, "Подзадача");
+        Subtask subtask = new Subtask(taskToSubtask, epicId);
+
+        int subtaskId = inMemoryTaskManager.addSubtask(subtask);
+
+        assertEquals(epicId,
+                inMemoryTaskManager.getSubtask(subtaskId).getEpicId(),
+                "Неверно сохраняется эпик для сабтаска.");
+    }
+
+    @Test
+    public void ShouldBeExistSubtaskForExistedEpicWithSubtask() {
+        Task taskToEpic = new Task(1, "Задача-эпик");
+        Epic epic = new Epic(taskToEpic);
+        int epicId = inMemoryTaskManager.addEpic(epic);
+
+        Task taskToSubtask = new Task(1, "Подзадача");
+        Subtask subtask = new Subtask(taskToSubtask, epicId);
+
+        int subtaskId = inMemoryTaskManager.addSubtask(subtask);
+
+        assertEquals(subtaskId,
+                inMemoryTaskManager.getEpic(epicId).getSubtaskIds().getFirst(),
+                "Неверно сохраняется сабтаск в эпике.");
+    }
 }
