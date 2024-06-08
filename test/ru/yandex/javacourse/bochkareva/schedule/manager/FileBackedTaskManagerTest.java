@@ -3,6 +3,7 @@ package ru.yandex.javacourse.bochkareva.schedule.manager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.bochkareva.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.bochkareva.schedule.manager.FileBackedTaskManager;
 import ru.yandex.javacource.bochkareva.schedule.task.Epic;
 import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
@@ -196,5 +197,12 @@ class FileBackedTaskManagerTest {
         //int countTasks = newFileBackedTaskManager.getTasks().size() + newFileBackedTaskManager.getEpics().size() + newFileBackedTaskManager.getSubtasks().size();
 
         assertEquals(7, 7, "Запись и чтение файлов реализовано неверно.");
+    }
+
+    @Test
+    public void testExceptionWhileReadingNotExistingFile() {
+        assertThrows(ManagerSaveException.class, () -> {
+            FileBackedTaskManager.loadFromFile(new File("doentexistfile.csv"));
+        }, "Чтение несуществующего файла должно приводить к исключению.");
     }
 }
