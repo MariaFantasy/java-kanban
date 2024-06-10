@@ -2,9 +2,10 @@ package ru.yandex.javacource.bochkareva.schedule.task;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task implements Cloneable {
-    private ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private List<Integer> subtaskIds = new ArrayList<>();
     private LocalDateTime endTime;
 
     public Epic(Task task) {
@@ -15,7 +16,7 @@ public class Epic extends Task implements Cloneable {
         super(id, name, description, status);
     }
 
-    public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
+    public void setSubtaskIds(List<Integer> subtaskIds) {
         this.subtaskIds = subtaskIds;
     }
 
@@ -23,7 +24,7 @@ public class Epic extends Task implements Cloneable {
         this.endTime = endTime;
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 

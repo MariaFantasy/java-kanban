@@ -13,7 +13,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -129,7 +129,7 @@ class FileBackedTaskManagerTest {
         fileBackedTaskManager.deleteSubtaskById(subtaskId);
         Epic epicResult = fileBackedTaskManager.getEpic(epicId).get();
 
-        ArrayList<Integer> result = epicResult.getSubtaskIds();
+        List<Integer> result = epicResult.getSubtaskIds();
 
         assertEquals(0, epicResult.getSubtaskIds().size(), "Подзадачи из эпика не удаляются.");
     }

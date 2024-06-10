@@ -9,9 +9,7 @@ import ru.yandex.javacource.bochkareva.schedule.task.Subtask;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
 import ru.yandex.javacource.bochkareva.schedule.task.TaskStatus;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.concurrent.Flow;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -137,7 +135,7 @@ class InMemoryTaskManagerTest {
         inMemoryTaskManager.deleteSubtaskById(subtaskId);
         Epic epicResult = inMemoryTaskManager.getEpic(epicId).get();
 
-        ArrayList<Integer> result = epicResult.getSubtaskIds();
+        List<Integer> result = epicResult.getSubtaskIds();
 
         assertEquals(0,
                 epicResult.getSubtaskIds().size(),
