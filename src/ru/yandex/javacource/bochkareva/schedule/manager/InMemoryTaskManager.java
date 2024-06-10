@@ -278,12 +278,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateEpic(int id) {
-        Epic epic = epics.get(id);
-        if (epic == null) {
-            return;
-        }
-        List<Subtask> subtasks = getSubtasksOfEpic(id);
+    private void updateEpicStatus(Epic epic) {
+        List<Subtask> subtasks = getSubtasksOfEpic(epic.getId());
 
         int doneSubtasks = (int) subtasks.stream().filter(subtask -> subtask.getStatus() == TaskStatus.DONE).count();
         int newSubtasks = (int) subtasks.stream().filter(subtask -> subtask.getStatus() == TaskStatus.NEW).count();
@@ -295,6 +291,10 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
         }
+    }
+
+    private void updateEpicDuration(Epic epic) {
+        List<Subtask> subtasks = getSubtasksOfEpic(epic.getId());
 
         subtasks.stream()
                 .map(Task::getStartTime)
@@ -314,6 +314,15 @@ public class InMemoryTaskManager implements TaskManager {
                 .map(Task::getDuration)
                 .filter(Objects::nonNull)
                 .reduce(Duration.ZERO, Duration::plus));
+    }
+
+    private void updateEpic(int id) {
+        Epic epic = epics.get(id);
+        if (epic == null) {
+            return;
+        }
+        updateEpicStatus(epic);
+        updateEpicDuration(epic);
     }
 
     @Override
