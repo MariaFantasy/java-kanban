@@ -57,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Integer addTask(Task task) throws TaskValidationException {
+    public Integer addTask(Task task) {
         if (task == null) {
             return null;
         }
@@ -88,7 +88,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Integer addSubtask(Subtask subtask) throws TaskValidationException {
+    public Integer addSubtask(Subtask subtask) {
         if (subtask == null) {
             return null;
         }
@@ -199,7 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws TaskValidationException {
+    public void updateTask(Task task) {
         if (task == null) {
             return;
         }
@@ -235,7 +235,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws TaskValidationException {
+    public void updateSubtask(Subtask subtask) {
         if (subtask == null) {
             return;
         }
