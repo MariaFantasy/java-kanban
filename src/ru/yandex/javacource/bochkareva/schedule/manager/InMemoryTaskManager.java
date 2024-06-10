@@ -24,23 +24,6 @@ public class InMemoryTaskManager implements TaskManager {
         taskCounter = 0;
     }
 
-    private void addTaskToPrioritizedTasks(int id) {
-        Task task = tasks.get(id);
-        if (task == null) {
-            task = epics.get(id);
-            if (task == null) {
-                task = subtasks.get(id);
-            }
-        }
-        if (task == null) {
-            return;
-        }
-
-        if (task.getStartTime() != null) {
-            prioritizedTasks.add(task);
-        }
-    }
-
     private boolean isIntersection(Task task1, Task task2) {
         final LocalDateTime start1 = task1.getStartTime();
         final LocalDateTime end1 = task1.getEndTime();
@@ -89,7 +72,9 @@ public class InMemoryTaskManager implements TaskManager {
         int id = ++taskCounter;
         task.setId(id);
         tasks.put(id, task);
-        addTaskToPrioritizedTasks(id);
+        if (task.getStartTime() != null) {
+            prioritizedTasks.add(task);
+        }
         return id;
     }
 
@@ -129,14 +114,17 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(id, newSubtask);
         epic.addSubtask(id);
         updateEpic(epic.getId());
-        addTaskToPrioritizedTasks(id);
+        if (subtask.getStartTime() != null) {
+            prioritizedTasks.add(subtask);
+        }
         return id;
     }
 
     @Override
     public void deleteTaskById(int id) {
         tasks.remove(id);
-        prioritizedTasks.remove(id);
+        final Optional<Task> task = getTaskById(id);
+        task.ifPresent(prioritizedTasks::remove);
         historyManager.remove(id);
     }
 
@@ -164,12 +152,12 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.remove(id);
         updateEpic(epicId);
         historyManager.remove(id);
-        prioritizedTasks.remove(id);
+        prioritizedTasks.remove(subtask);
     }
 
     @Override
     public void clearTasks() {
-        tasks.keySet().stream().forEach(prioritizedTasks::remove);
+        tasks.values().stream().forEach(prioritizedTasks::remove);
         tasks.clear();
     }
 
@@ -181,7 +169,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubtasks() {
-        subtasks.keySet().stream().forEach(prioritizedTasks::remove);
+        subtasks.values().stream().forEach(prioritizedTasks::remove);
         epics.values().stream()
             .peek(Epic::clear)
             .map(Task::getId)
@@ -205,8 +193,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getPrioritizedTasks() {
-        return prioritizedTasks.stream()
-                .toList();
+        return prioritizedTasks.stream().toList();
     }
 
     @Override
@@ -239,8 +226,10 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         tasks.put(id, task);
-        prioritizedTasks.remove(id);
-        addTaskToPrioritizedTasks(id);
+        prioritizedTasks.remove(task);
+        if (task.getStartTime() != null) {
+            prioritizedTasks.add(task);
+        }
     }
 
     @Override
@@ -283,8 +272,10 @@ public class InMemoryTaskManager implements TaskManager {
         }
         subtasks.put(id, subtask);
         updateEpic(epicId);
-        prioritizedTasks.remove(id);
-        addTaskToPrioritizedTasks(id);
+        prioritizedTasks.remove(subtask);
+        if (subtask.getStartTime() != null) {
+            prioritizedTasks.add(subtask);
+        }
     }
 
     private void updateEpic(int id) {
