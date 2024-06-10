@@ -56,7 +56,7 @@ class InMemoryTaskManagerTest {
     @Test
     public void shouldBeAbleToAddTaskAndFindIt() {
         int taskId = inMemoryTaskManager.addTask(task);
-        Task calculatedTask = inMemoryTaskManager.getTask(taskId).get();
+        Task calculatedTask = inMemoryTaskManager.getTask(taskId);
 
         assertEquals(taskId,
                 calculatedTask.getId(),
@@ -67,7 +67,7 @@ class InMemoryTaskManagerTest {
     public void shouldBeAbleToAddEpicAndFindIt() {
         Epic epic = new Epic(task);
         int epicId = inMemoryTaskManager.addEpic(epic);
-        Epic calculatedEpic = inMemoryTaskManager.getEpic(epicId).get();
+        Epic calculatedEpic = inMemoryTaskManager.getEpic(epicId);
 
         assertEquals(epicId,
                 calculatedEpic.getId(),
@@ -80,7 +80,7 @@ class InMemoryTaskManagerTest {
         int epicId = inMemoryTaskManager.addEpic(epic);
         Subtask subtask = new Subtask(task, epicId);
         int subtaskId = inMemoryTaskManager.addSubtask(subtask);
-        Subtask calculatedSubtask = inMemoryTaskManager.getSubtask(subtaskId).get();
+        Subtask calculatedSubtask = inMemoryTaskManager.getSubtask(subtaskId);
 
         assertEquals(subtaskId,
                 calculatedSubtask.getId(),
@@ -92,7 +92,7 @@ class InMemoryTaskManagerTest {
         int taskId = inMemoryTaskManager.addTask(task.clone());
         task.setName("New Name");
 
-        assertNotEquals(inMemoryTaskManager.getTask(taskId).get().getName(),
+        assertNotEquals(inMemoryTaskManager.getTask(taskId).getName(),
                 task.getName(),
                 "Могу изменять параметры в таске, который был добавлен в менеджер.");
     }
@@ -100,7 +100,7 @@ class InMemoryTaskManagerTest {
     @Test
     public void shouldHistoryManagerSaveOldTaskVersion() {
         int taskId = inMemoryTaskManager.addTask(task);
-        Task expectedTask = inMemoryTaskManager.getTaskById(taskId).get();
+        Task expectedTask = inMemoryTaskManager.getTaskById(taskId);
         Task taskToChange = new Task(expectedTask);
         taskToChange.setName("Super new name");
         inMemoryTaskManager.updateTask(taskToChange);
@@ -133,7 +133,7 @@ class InMemoryTaskManagerTest {
         int subtaskId = inMemoryTaskManager.addSubtask(subtask);
 
         inMemoryTaskManager.deleteSubtaskById(subtaskId);
-        Epic epicResult = inMemoryTaskManager.getEpic(epicId).get();
+        Epic epicResult = inMemoryTaskManager.getEpic(epicId);
 
         List<Integer> result = epicResult.getSubtaskIds();
 
@@ -164,7 +164,7 @@ class InMemoryTaskManagerTest {
         int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
 
         assertEquals(TaskStatus.NEW,
-                inMemoryTaskManager.getTaskById(epicId).get().getStatus(),
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
                 "Неверно определяется статус для эпика - NEW.");
     }
 
@@ -190,7 +190,7 @@ class InMemoryTaskManagerTest {
         int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
 
         assertEquals(TaskStatus.DONE,
-                inMemoryTaskManager.getTaskById(epicId).get().getStatus(),
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
                 "Неверно определяется статус для эпика - DONE.");
     }
 
@@ -216,7 +216,7 @@ class InMemoryTaskManagerTest {
         int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
 
         assertEquals(TaskStatus.IN_PROGRESS,
-                inMemoryTaskManager.getTaskById(epicId).get().getStatus(),
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
                 "Неверно определяется статус для эпика - IN_PROGRESS.");
     }
 
@@ -242,7 +242,7 @@ class InMemoryTaskManagerTest {
         int subtask3Id = inMemoryTaskManager.addSubtask(subtask3);
 
         assertEquals(TaskStatus.IN_PROGRESS,
-                inMemoryTaskManager.getTaskById(epicId).get().getStatus(),
+                inMemoryTaskManager.getTaskById(epicId).getStatus(),
                 "Неверно определяется статус для эпика - IN_PROGRESS.");
     }
 
@@ -258,7 +258,7 @@ class InMemoryTaskManagerTest {
         int subtaskId = inMemoryTaskManager.addSubtask(subtask);
 
         assertEquals(epicId,
-                inMemoryTaskManager.getSubtask(subtaskId).get().getEpicId(),
+                inMemoryTaskManager.getSubtask(subtaskId).getEpicId(),
                 "Неверно сохраняется эпик для сабтаска.");
     }
 
@@ -274,7 +274,7 @@ class InMemoryTaskManagerTest {
         int subtaskId = inMemoryTaskManager.addSubtask(subtask);
 
         assertEquals(subtaskId,
-                inMemoryTaskManager.getEpic(epicId).get().getSubtaskIds().getFirst(),
+                inMemoryTaskManager.getEpic(epicId).getSubtaskIds().getFirst(),
                 "Неверно сохраняется сабтаск в эпике.");
     }
 }

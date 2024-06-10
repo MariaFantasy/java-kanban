@@ -4,7 +4,6 @@ import ru.yandex.javacource.bochkareva.schedule.task.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskManager {
 
@@ -40,13 +39,13 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    Optional<Task> getTask(int id);
+    Task getTask(int id);
 
-    Optional<Epic> getEpic(int id);
+    Epic getEpic(int id);
 
-    Optional<Subtask> getSubtask(int id);
+    Subtask getSubtask(int id);
 
-    Optional<Task> getTaskById(int id);
+    Task getTaskById(int id);
 
     List<Task> getHistory();
 }

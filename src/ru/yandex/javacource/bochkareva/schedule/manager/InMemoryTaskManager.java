@@ -123,8 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         tasks.remove(id);
-        final Optional<Task> task = getTaskById(id);
-        task.ifPresent(prioritizedTasks::remove);
+        prioritizedTasks.remove(getTaskById(id));
         historyManager.remove(id);
     }
 
@@ -326,49 +325,49 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Optional<Task> getTask(int id) {
+    public Task getTask(int id) {
         Task task = tasks.get(id);
         if (task == null) {
-            return Optional.empty();
+            return null;
         }
         historyManager.add(task);
-        return Optional.of(task);
+        return task;
     }
 
     @Override
-    public Optional<Epic> getEpic(int id) {
+    public Epic getEpic(int id) {
         Epic epic = epics.get(id);
         if (epic == null) {
-            return Optional.empty();
+            return null;
         }
         historyManager.add(epic);
-        return Optional.of(epic);
+        return epic;
     }
 
     @Override
-    public Optional<Subtask> getSubtask(int id) {
+    public Subtask getSubtask(int id) {
         Subtask subtask = subtasks.get(id);
         if (subtask == null) {
-            return Optional.empty();
+            return null;
         }
         historyManager.add(subtask);
-        return Optional.of(subtask);
+        return subtask;
     }
 
     @Override
-    public Optional<Task> getTaskById(int id) {
+    public Task getTaskById(int id) {
         Task task = tasks.get(id);
         if (task == null) {
             task = epics.get(id);
             if (task == null) {
                 task = subtasks.get(id);
                 if (task == null) {
-                    return Optional.empty();
+                    return null;
                 }
             }
         }
         historyManager.add(task);
-        return Optional.of(task);
+        return task;
     }
 
     public List<Task> getHistory() {
