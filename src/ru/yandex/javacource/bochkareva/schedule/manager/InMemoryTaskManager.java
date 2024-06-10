@@ -11,11 +11,9 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
-    protected final TreeSet<Integer> prioritizedTasks = new TreeSet<>(new Comparator<Integer>() {
+    protected final TreeSet<Task> prioritizedTasks = new TreeSet<>(new Comparator<Task>() {
         @Override
-        public int compare(Integer id1, Integer id2) {
-            final Task task1 = getTaskById(id1).get();
-            final Task task2 = getTaskById(id2).get();
+        public int compare(Task task1, Task task2) {
             return task1.getStartTime().compareTo(task2.getStartTime());
         }
     });
@@ -39,7 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         if (task.getStartTime() != null) {
-            prioritizedTasks.add(id);
+            prioritizedTasks.add(task);
         }
     }
 
@@ -208,9 +206,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getPrioritizedTasks() {
         return prioritizedTasks.stream()
-                .map(this::getTaskById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .toList();
     }
 
