@@ -5,6 +5,8 @@ import ru.yandex.javacource.bochkareva.schedule.task.*;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -36,10 +38,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 taskManager.addAnyTask(task);
             }
-            for (Subtask subtask : taskManager.subtasks.values()) {
-                final Epic epic = taskManager.epics.get(subtask.getEpicId());
-                epic.addSubtask(subtask.getId());
-            }
+            taskManager.subtasks.values().stream()
+                    .forEach(subtask -> {
+                        final Epic epic = taskManager.epics.get(subtask.getEpicId());
+                        epic.addSubtask(subtask.getId());
+                    });
             taskManager.taskCounter = taskCounter;
         } catch (FileNotFoundException e) {
             throw new ManagerSaveException("Файл для чтения не найден.");
@@ -57,14 +60,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String name = taskInfo[2];
         final TaskStatus status = TaskStatus.valueOf(taskInfo[3]);
         final String description = taskInfo[4];
+        final LocalDateTime startTime = (!taskInfo[6].equals("null") ? LocalDateTime.parse(taskInfo[6]) : null);
+        final LocalDateTime endTime = (!taskInfo[7].equals("null") ? LocalDateTime.parse(taskInfo[7]) : null);
+        final Duration duration = (!taskInfo[8].equals("null") ? Duration.parse(taskInfo[8]) : null);
         if (type == TaskType.TASK) {
-            return new Task(id, name, description, status);
+            final Task task = new Task(id, name, description, status);
+            task.setStartTime(startTime);
+            task.setDuration(duration);
+            return task;
         }
         if (type == TaskType.EPIC) {
-            return new Epic(id, name, description, status);
+            final Epic epic = new Epic(id, name, description, status);
+            epic.setStartTime(startTime);
+            epic.setEndTime(endTime);
+            epic.setDuration(duration);
+            return epic;
         }
         final int epicId = Integer.parseInt(taskInfo[5]);
-        return new Subtask(id, name, description, status, epicId);
+        final Subtask subtask = new Subtask(id, name, description, status, epicId);
+        subtask.setStartTime(startTime);
+        subtask.setDuration(duration);
+        return subtask;
     }
 
     protected void addAnyTask(Task task) {
@@ -87,18 +103,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write(HEADER);
             writer.newLine();
 
-            for (Task task : tasks.values()) {
-                writer.write(CSVTaskFormat.toString(task));
-                writer.newLine();
-            }
-            for (Epic epic : epics.values()) {
-                writer.write(CSVTaskFormat.toString(epic));
-                writer.newLine();
-            }
-            for (Subtask subtask : subtasks.values()) {
-                writer.write(CSVTaskFormat.toString(subtask));
-                writer.newLine();
-            }
+            tasks.values().stream()
+                .map(CSVTaskFormat::toString)
+                .forEach(string -> {
+                    try {
+                        writer.write(string);
+                        writer.newLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            epics.values().stream()
+                    .map(CSVTaskFormat::toString)
+                    .forEach(string -> {
+                        try {
+                            writer.write(string);
+                            writer.newLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+            subtasks.values().stream()
+                    .map(CSVTaskFormat::toString)
+                    .forEach(string -> {
+                        try {
+                            writer.write(string);
+                            writer.newLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла.");
         }
@@ -211,31 +245,59 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Epic epic2Sprint7 = new Epic(taskToEpic2Sprint7);
         int epic2IdSprint7 = taskManager.addEpic(epic2Sprint7);
 
+        // Меняем статусы задач
+        task1Sprint7.setId(task1IdSprint7);
+        task1Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        task1Sprint7.setStartTime(LocalDateTime.now());
+        taskManager.updateTask(task1Sprint7);
+
+        task1Sprint7.setStatus(TaskStatus.DONE);
+        task1Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
+        taskManager.updateTask(task1Sprint7);
+
+        task2Sprint7.setId(task2IdSprint7);
+        task2Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        task2Sprint7.setStartTime(LocalDateTime.now());
+        taskManager.updateTask(task2Sprint7);
+
+        subtask1Sprint7.setId(subtask1IdSprint7);
+        subtask2Sprint7.setId(subtask2IdSprint7);
+        subtask3Sprint7.setId(subtask3IdSprint7);
+        subtask1Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        subtask2Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        subtask3Sprint7.setStatus(TaskStatus.IN_PROGRESS);
+        subtask1Sprint7.setStartTime(LocalDateTime.now());
+        subtask2Sprint7.setStartTime(LocalDateTime.now());
+        subtask3Sprint7.setStartTime(LocalDateTime.now());
+        taskManager.updateSubtask(subtask1Sprint7);
+        taskManager.updateSubtask(subtask2Sprint7);
+        taskManager.updateSubtask(subtask3Sprint7);
+
+        subtask1Sprint7.setStatus(TaskStatus.DONE);
+        subtask2Sprint7.setStatus(TaskStatus.DONE);
+        subtask3Sprint7.setStatus(TaskStatus.DONE);
+        subtask1Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
+        subtask2Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(2)));
+        subtask3Sprint7.setDuration(Duration.between(LocalDateTime.now(), LocalDateTime.now().plusDays(3)));
+        taskManager.updateSubtask(subtask1Sprint7);
+        taskManager.updateSubtask(subtask2Sprint7);
+        taskManager.updateSubtask(subtask3Sprint7);
+
         FileBackedTaskManager taskManager2 = FileBackedTaskManager.loadFromFile(file);
         printAllTasks(taskManager2);
     }
 
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Task epic : manager.getEpics()) {
-            System.out.println(epic);
+        manager.getTasks().stream().forEach(System.out::println);
 
-            for (Task task : manager.getSubtasksOfEpic(epic.getId())) {
-                System.out.println("--> " + task);
-            }
-        }
+        System.out.println("Эпики:");
+        manager.getEpics().stream().forEach(System.out::println);
+
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubtasks()) {
-            System.out.println(subtask);
-        }
+        manager.getSubtasks().stream().forEach(System.out::println);
 
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
+        manager.getHistory().stream().forEach(System.out::println);
     }
 }

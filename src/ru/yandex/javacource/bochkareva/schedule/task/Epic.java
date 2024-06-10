@@ -1,9 +1,12 @@
 package ru.yandex.javacource.bochkareva.schedule.task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task implements Cloneable {
-    private ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private List<Integer> subtaskIds = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(Task task) {
         super(task);
@@ -13,11 +16,15 @@ public class Epic extends Task implements Cloneable {
         super(id, name, description, status);
     }
 
-    public void setSubtaskIds(ArrayList<Integer> subtaskIds) {
+    public void setSubtaskIds(List<Integer> subtaskIds) {
         this.subtaskIds = subtaskIds;
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
@@ -32,9 +39,7 @@ public class Epic extends Task implements Cloneable {
         if (subtasks == null) {
             return;
         }
-        for (int subtaskId : subtasks) {
-            addSubtask(subtaskId);
-        }
+        subtasks.stream().forEach(this::addSubtask);
     }
 
     public void deleteTaskById(Integer id) {
@@ -43,6 +48,11 @@ public class Epic extends Task implements Cloneable {
 
     public void clear() {
         subtaskIds.clear();
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     @Override
@@ -65,6 +75,10 @@ public class Epic extends Task implements Cloneable {
         } else {
             result = result + ", subtasks=null";
         }
+
+        result = result + ", startTime=" + getStartTime();
+        result = result + ", endTime=" + getEndTime();
+        result = result + ", duration=" + getDuration();
 
         return result + '}';
     }

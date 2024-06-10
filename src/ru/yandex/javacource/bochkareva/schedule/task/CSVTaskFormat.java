@@ -8,6 +8,9 @@ public class CSVTaskFormat {
                 + task.getName() + ","
                 + task.getStatus() + ","
                 + task.getDescription() + ","
-                + (task.getType().equals(TaskType.SUBTASK) ? ((Subtask) task).getEpicId() : "");
+                + (task.getType().equals(TaskType.SUBTASK) ? ((Subtask) task).getEpicId() : "") + ","
+                + (!task.getStatus().equals(TaskStatus.NEW) ? task.getStartTime() : "null") + ","
+                + (task.getStatus().equals(TaskStatus.DONE) ? task.getEndTime() : "null") + ","
+                + (task.getStatus().equals(TaskStatus.DONE) ? task.getDuration() : "null");
     }
 }
