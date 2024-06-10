@@ -57,17 +57,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Integer addTask(Task task) {
+    public Integer addTask(Task task) throws TaskValidationException {
         if (task == null) {
             return null;
         }
-        try {
-            if (validateTask(task)) {
-                throw new Exception("Задачи пересекаются");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return -1;
+        if (validateTask(task)) {
+            throw new TaskValidationException("Невозможно добавить задачу с интервалом начало: "
+                    + task.getStartTime() + ", конец: " + task.getEndTime());
         }
         int id = ++taskCounter;
         task.setId(id);
@@ -92,17 +88,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Integer addSubtask(Subtask subtask) {
+    public Integer addSubtask(Subtask subtask) throws TaskValidationException {
         if (subtask == null) {
             return null;
         }
-        try {
-            if (validateTask(subtask)) {
-                throw new Exception("Задачи пересекаются");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return -1;
+        if (validateTask(subtask)) {
+            throw new TaskValidationException("Невозможно добавить задачу с интервалом начало: "
+                    + subtask.getStartTime() + ", конец: " + subtask.getEndTime());
         }
         Epic epic = epics.get(subtask.getEpicId());
         if (epic == null) {
@@ -207,17 +199,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws TaskValidationException {
         if (task == null) {
             return;
         }
-        try {
-            if (validateTask(task)) {
-                throw new Exception("Задачи пересекаются");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return;
+        if (validateTask(task)) {
+            throw new TaskValidationException("Невозможно добавить задачу с интервалом начало: "
+                    + task.getStartTime() + ", конец: " + task.getEndTime());
         }
         int id = task.getId();
         Task savedTask = tasks.get(id);
@@ -247,17 +235,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws TaskValidationException {
         if (subtask == null) {
             return;
         }
-        try {
-            if (validateTask(subtask)) {
-                throw new Exception("Задачи пересекаются");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return;
+        if (validateTask(subtask)) {
+            throw new TaskValidationException("Невозможно добавить задачу с интервалом начало: "
+                    + subtask.getStartTime() + ", конец: " + subtask.getEndTime());
         }
         int id = subtask.getId();
         int epicId = subtask.getEpicId();
