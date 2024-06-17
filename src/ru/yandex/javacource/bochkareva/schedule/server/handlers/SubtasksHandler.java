@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.javacource.bochkareva.schedule.exceptions.ManagerSaveException;
 import ru.yandex.javacource.bochkareva.schedule.exceptions.TaskValidationException;
 import ru.yandex.javacource.bochkareva.schedule.manager.TaskManager;
@@ -126,7 +125,7 @@ public class SubtasksHandler extends BaseHttpHandler {
         if (subtask == null) {
             sendNotFound(exchange);
         } else {
-            taskManager.deleteTaskById(id);
+            taskManager.deleteSubtaskById(id);
             sendText(exchange, gson.toJson(subtask), 200);
         }
     }
