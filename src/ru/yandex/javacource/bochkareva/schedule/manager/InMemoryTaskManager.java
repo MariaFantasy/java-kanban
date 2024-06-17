@@ -1,5 +1,6 @@
 package ru.yandex.javacource.bochkareva.schedule.manager;
 
+import ru.yandex.javacource.bochkareva.schedule.exceptions.TaskValidationException;
 import ru.yandex.javacource.bochkareva.schedule.task.*;
 
 import java.time.Duration;
@@ -51,6 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
     private boolean validateTask(Task task) {
         List<Task> tasks = getPrioritizedTasks();
         Optional<Task> result = tasks.stream()
+            .filter(prioritizedTask -> prioritizedTask.getId() != task.getId())
             .filter(prioritizedTask -> isIntersection(prioritizedTask, task))
             .findAny();
         return result.isPresent();
@@ -114,8 +116,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskById(int id) {
-        tasks.remove(id);
         prioritizedTasks.remove(getTaskById(id));
+        tasks.remove(id);
         historyManager.remove(id);
     }
 
@@ -138,12 +140,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask == null) {
             return;
         }
+        prioritizedTasks.remove(subtask);
         int epicId = subtask.getEpicId();
         epics.get(epicId).deleteTaskById(id);
         subtasks.remove(id);
         updateEpic(epicId);
         historyManager.remove(id);
-        prioritizedTasks.remove(subtask);
     }
 
     @Override
