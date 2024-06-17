@@ -96,16 +96,20 @@ public class TasksHandler extends BaseHttpHandler {
         try {
             if (jsonObject.has("id")) {
                 if (taskManager.getTaskById(id) == null) {
-                    sendBadRequest(exchange, "Передан таск, которого ранее не было.");
+                    sendBadRequest(exchange, "Передан id, которого ранее не было.");
                     return;
                 }
                 taskManager.updateTask(task);
-                final Task updatedTask = taskManager.getTaskById(task.getId());
-                sendText(exchange, updatedTask.toString(), 201);
+                final Task updatedTask = taskManager.getTaskById(id);
+                sendText(exchange, gson.toJson(updatedTask), 201);
             } else {
-                int generatedId = taskManager.addTask(task);
+                Integer generatedId = taskManager.addTask(task);
+                if (generatedId == null) {
+                    sendBadRequest(exchange, "Не получается создать Task с указанными параметрами.");
+                    return;
+                }
                 final Task generatedTask = taskManager.getTaskById(generatedId);
-                sendText(exchange, generatedTask.toString(), 201);
+                sendText(exchange, gson.toJson(generatedTask), 201);
             }
         } catch (TaskValidationException e) {
             sendHasInteractions(exchange);
@@ -119,10 +123,8 @@ public class TasksHandler extends BaseHttpHandler {
         int id = Integer.parseInt(pathParts[2]);
         final Task task = taskManager.getTaskById(id).clone();
         if (task == null) {
-            System.out.println("HERE1 " + id);
             sendNotFound(exchange);
         } else {
-            System.out.println("HERE2 " + id);
             taskManager.deleteTaskById(id);
             sendText(exchange, gson.toJson(task), 200);
         }
