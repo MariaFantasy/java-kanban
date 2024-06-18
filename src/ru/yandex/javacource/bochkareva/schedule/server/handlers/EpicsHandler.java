@@ -29,26 +29,30 @@ public class EpicsHandler extends BaseHttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
-        switch (endpoint) {
-            case GET_EPICS:
-                getEpics(exchange);
-                break;
-            case GET_EPIC_BY_ID:
-                getEpicById(exchange);
-                break;
-            case POST_EPIC:
-                postEpic(exchange);
-                break;
-            case DELETE_EPIC:
-                deleteEpic(exchange);
-                break;
-            default:
+        try {
+            switch (endpoint) {
+                case GET_EPICS:
+                    getEpics(exchange);
+                    break;
+                case GET_EPIC_BY_ID:
+                    getEpicById(exchange);
+                    break;
+                case POST_EPIC:
+                    postEpic(exchange);
+                    break;
+                case DELETE_EPIC:
+                    deleteEpic(exchange);
+                    break;
+                default:
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private void getEpics(HttpExchange exchange) throws IOException {
         final List<Epic> epics = taskManager.getEpics();
-        String jsonString = epics.stream().map(gson::toJson).collect(Collectors.joining(",", "{", "}"));
+        String jsonString = epics.stream().map(gson::toJson).collect(Collectors.joining(",", "[", "]"));
 
         sendText(exchange, jsonString, 200);
     }

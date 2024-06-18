@@ -28,26 +28,30 @@ public class TasksHandler extends BaseHttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
-        switch (endpoint) {
-            case GET_TASKS:
-                getTasks(exchange);
-                break;
-            case GET_TASK_BY_ID:
-                getTaskById(exchange);
-                break;
-            case POST_TASK:
-                postTask(exchange);
-                break;
-            case DELETE_TASK:
-                deleteTask(exchange);
-                break;
-            default:
+        try {
+            switch (endpoint) {
+                case GET_TASKS:
+                    getTasks(exchange);
+                    break;
+                case GET_TASK_BY_ID:
+                    getTaskById(exchange);
+                    break;
+                case POST_TASK:
+                    postTask(exchange);
+                    break;
+                case DELETE_TASK:
+                    deleteTask(exchange);
+                    break;
+                default:
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private void getTasks(HttpExchange exchange) throws IOException {
         final List<Task> tasks = taskManager.getTasks();
-        String jsonString = tasks.stream().map(gson::toJson).collect(Collectors.joining(",", "{", "}"));
+        String jsonString = tasks.stream().map(gson::toJson).collect(Collectors.joining(",", "[", "]"));
 
         sendText(exchange, jsonString, 200);
     }
@@ -87,7 +91,7 @@ public class TasksHandler extends BaseHttpHandler {
         Duration duration = jsonObject.has("duration") ?
                 Duration.parse(jsonObject.get("duration").getAsString()) : null;
         LocalDateTime startTime = jsonObject.has("startTime") ?
-                LocalDateTime.parse(jsonObject.get("startTime").getAsString()) : null;
+                LocalDateTime.parse(jsonObject.get("startTime").getAsString(), dtf) : null;
 
         Task task = new Task(id, name, description, status);
         task.setDuration(duration);

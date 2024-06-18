@@ -46,7 +46,7 @@ public class SubtasksHandler extends BaseHttpHandler {
 
     private void getSubtasks(HttpExchange exchange) throws IOException {
         final List<Subtask> subtasks = taskManager.getSubtasks();
-        String jsonString = subtasks.stream().map(gson::toJson).collect(Collectors.joining(",", "{", "}"));
+        String jsonString = subtasks.stream().map(gson::toJson).collect(Collectors.joining(",", "[", "]"));
 
         sendText(exchange, jsonString, 200);
     }
