@@ -10,12 +10,13 @@ import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
+    private static HttpServer httpServer;
 
-    public static void main(String[] args) throws IOException {
+    public static void start() throws IOException {
         Managers managers = new Managers();
         TaskManager taskManager = managers.getDefault();
 
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 
         httpServer.createContext("/tasks", new TasksHandler(taskManager));
         httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
@@ -24,9 +25,13 @@ public class HttpTaskServer {
         httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
 
         httpServer.start(); // запускаем сервер
+    }
 
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-        // завершаем работу сервера для корректной работы тренажёра
-        //httpServer.stop(1);
+    public static void stop() {
+        httpServer.stop(0);
+    }
+
+    public static void main(String[] args) throws IOException {
+        start();
     }
 }

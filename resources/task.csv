@@ -1,4 +1,5 @@
 id,type,name,status,description,epic
-1,EPIC,Очень важная задача,DONE,Нужно доделать задание,,null,null,PT0S
-3,SUBTASK,Очень важная задача,DONE,Нужно доделать задание,1,null,null,null
-4,SUBTASK,Очень важная задача,DONE,Нужно доделать задание,1,null,null,null
+1,TASK,Очень важная задача,DONE,Нужно доделать задание,,2025-01-01T00:00:02,2025-01-01T20:15:02,PT20H15M
+2,EPIC,Очень важная задача,DONE,Нужно доделать задание,,null,null,PT0S
+3,SUBTASK,Очень важная задача,DONE,Нужно доделать задание,2,null,null,null
+4,SUBTASK,Очень важная задача,DONE,Нужно доделать задание,2,null,null,null
