@@ -1,7 +1,6 @@
 package ru.yandex.javacource.bochkareva.schedule.server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.javacource.bochkareva.schedule.manager.TaskManager;
 import ru.yandex.javacource.bochkareva.schedule.task.Task;
 
