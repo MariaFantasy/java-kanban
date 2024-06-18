@@ -27,20 +27,24 @@ public class SubtasksHandler extends BaseHttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
-        switch (endpoint) {
-            case GET_SUBTASKS:
-                getSubtasks(exchange);
-                break;
-            case GET_SUBTASK_BY_ID:
-                getSubtaskById(exchange);
-                break;
-            case POST_SUBTASK:
-                postSubtask(exchange);
-                break;
-            case DELETE_SUBTASK:
-                deleteSubtask(exchange);
-                break;
-            default:
+        try {
+            switch (endpoint) {
+                case GET_SUBTASKS:
+                    getSubtasks(exchange);
+                    break;
+                case GET_SUBTASK_BY_ID:
+                    getSubtaskById(exchange);
+                    break;
+                case POST_SUBTASK:
+                    postSubtask(exchange);
+                    break;
+                case DELETE_SUBTASK:
+                    deleteSubtask(exchange);
+                    break;
+                default:
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -87,7 +91,7 @@ public class SubtasksHandler extends BaseHttpHandler {
         Duration duration = jsonObject.has("duration") ?
                 Duration.parse(jsonObject.get("duration").getAsString()) : null;
         LocalDateTime startTime = jsonObject.has("startTime") ?
-                LocalDateTime.parse(jsonObject.get("startTime").getAsString()) : null;
+                LocalDateTime.parse(jsonObject.get("startTime").getAsString(), dtf) : null;
 
         Subtask subtask = new Subtask(id, name, description, status, epicId);
         subtask.setDuration(duration);

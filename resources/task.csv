@@ -1,2 +1,4 @@
 id,type,name,status,description,epic
-2,TASK,Очень важная задача,NEW,Нужно доделать задание,,null,null,null
+1,EPIC,Очень важная задача,DONE,Нужно доделать задание,,null,null,PT0S
+3,SUBTASK,Очень важная задача,DONE,Нужно доделать задание,1,null,null,null
+4,SUBTASK,Очень важная задача,DONE,Нужно доделать задание,1,null,null,null
