@@ -31,22 +31,20 @@ public class InMemoryTaskManager implements TaskManager {
         final LocalDateTime start2 = task2.getStartTime();
         final LocalDateTime end2 = task2.getEndTime();
 
+
         if (start1 == null || start2 == null) {
             return false;
         }
         if (end1 == null && end2 == null) {
             return true;
         }
-        if (end1 == null && start1.isBefore(end2)) {
-            return true;
+        if (end1 == null) {
+            return start1.isBefore(end2);
         }
-        if (end2 == null && start2.isBefore(end1)) {
-            return true;
+        if (end2 == null) {
+            return start2.isBefore(end1);
         }
-        if (start1.isBefore(end2) && start2.isBefore(end1)) {
-            return true;
-        }
-        return false;
+        return start1.isBefore(end2) && start2.isBefore(end1);
     }
 
     private boolean validateTask(Task task) {

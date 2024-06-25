@@ -13,6 +13,7 @@ import ru.yandex.javacource.bochkareva.schedule.task.TaskStatus;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,9 +89,9 @@ public class TasksHandler extends BaseHttpHandler {
                 jsonObject.get("description").getAsString() : "";
         TaskStatus status = jsonObject.has("status") ?
                 TaskStatus.valueOf(jsonObject.get("status").getAsString()) : TaskStatus.NEW;
-        Duration duration = jsonObject.has("duration") ?
+        Duration duration = (jsonObject.has("duration") && !jsonObject.get("duration").getAsString().equals("null")) ?
                 Duration.parse(jsonObject.get("duration").getAsString()) : null;
-        LocalDateTime startTime = jsonObject.has("startTime") ?
+        LocalDateTime startTime = (jsonObject.has("startTime") && !jsonObject.get("startTime").getAsString().equals("null")) ?
                 LocalDateTime.parse(jsonObject.get("startTime").getAsString(), dtf) : null;
 
         Task task = new Task(id, name, description, status);
