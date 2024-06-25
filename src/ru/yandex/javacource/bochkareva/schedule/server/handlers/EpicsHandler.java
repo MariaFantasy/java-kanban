@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 
 public class EpicsHandler extends BaseHttpHandler {
     final TaskManager taskManager;
-    enum Endpoint {GET_EPICS, GET_EPIC_BY_ID, POST_EPIC, DELETE_EPIC, UNKNOWN};
+
+    enum Endpoint { GET_EPICS, GET_EPIC_BY_ID, POST_EPIC, DELETE_EPIC, UNKNOWN }
 
     public EpicsHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
