@@ -396,4 +396,41 @@ class HttpTaskServerTest {
         assertEquals(406, response.statusCode(), "Возвращается неверный статус.");
     }
 
+    @Test
+    public void testGetHistory() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/history");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode(), "Не получается получить историю задач.");
+
+        JsonElement jsonElement = JsonParser.parseString(response.body());
+        assertTrue(jsonElement.isJsonArray(), "При запросе истории задач возвращается не список.");
+
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JsonElement element = jsonArray.get(i);
+            assertTrue(element.isJsonObject(), "При запросе истории задач возвращается список не объектов.");
+        }
+    }
+
+    @Test
+    public void testGetPrioritized() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/prioritized");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode(), "Не получается получить приоритизированный список задач.");
+
+        JsonElement jsonElement = JsonParser.parseString(response.body());
+        assertTrue(jsonElement.isJsonArray(), "При запросе приоритизированного списка задач возвращается не список.");
+
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JsonElement element = jsonArray.get(i);
+            assertTrue(element.isJsonObject(), "При запросе приоритизированного списка задач возвращается список не объектов.");
+        }
+    }
 }
