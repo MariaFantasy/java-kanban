@@ -1,2 +1,9 @@
 id,type,name,status,description,epic
-2,TASK,Очень интересная задача 2,NEW,null,,null,null,null
+1,TASK,New Task,DONE,Нужно доделать задание,,2024-01-01T00:00,2024-01-01T20:15,PT20H15M
+2,TASK,New Task 2,DONE,,,2023-01-01T00:00,2023-01-01T20:15,PT20H15M
+6,TASK,New Task,NEW,,,null,null,null
+3,EPIC,New Epic,NEW,Нужно доделать задание,,null,null,null
+4,EPIC,New Epic 2,DONE,,,2025-01-01T00:00,2025-01-01T20:15,PT20H15M
+8,EPIC,New Epic,NEW,,,null,null,null
+5,SUBTASK,New Subtask,DONE,Нужно доделать задание,4,2025-01-01T00:00,2025-01-01T20:15,PT20H15M
+7,SUBTASK,New Subtask,DONE,,4,null,null,null

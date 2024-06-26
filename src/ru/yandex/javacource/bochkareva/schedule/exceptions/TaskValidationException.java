@@ -1,4 +1,4 @@
-package ru.yandex.javacource.bochkareva.schedule.manager;
+package ru.yandex.javacource.bochkareva.schedule.exceptions;
 
 public class TaskValidationException extends RuntimeException {
     public TaskValidationException() {
