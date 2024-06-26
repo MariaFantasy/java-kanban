@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TasksHandler extends BaseHttpHandler {
-    final TaskManager taskManager;
+    private final TaskManager taskManager;
 
     enum Endpoint { GET_TASKS, GET_TASK_BY_ID, POST_TASK, DELETE_TASK, UNKNOWN }
 

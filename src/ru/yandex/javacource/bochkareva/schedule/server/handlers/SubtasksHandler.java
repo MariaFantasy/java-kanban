@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SubtasksHandler extends BaseHttpHandler {
-    final TaskManager taskManager;
+    private final TaskManager taskManager;
 
     enum Endpoint { GET_SUBTASKS, GET_SUBTASK_BY_ID, POST_SUBTASK, DELETE_SUBTASK, UNKNOWN }
 
